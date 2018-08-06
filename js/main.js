@@ -51,7 +51,7 @@
 
   function showScreen(number) {
     number = (number === screens.length) ? 0 : number;
-    number = (number < 0) ? screens.length - 1 : number;
+    number = number < 0 ? screens.length - 1 : number;
     currentScreen = number;
     gameField.innerHTML = ``;
     gameField.appendChild(screens[number].cloneNode(true));
