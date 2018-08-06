@@ -24,16 +24,30 @@
   <button class="arrows__btn"><-</button>
   <button class="arrows__btn">-></button>
 </div>`;
+  let currentScreen = 0;
 
-  const game = {
-    slide: {
-      previous: () => showScreen(currentScreen - 1),
-      next: () => showScreen(currentScreen + 1)
+  function Game() {
+    function initialize() {
+      createNavigationControls();
+      createNavigationListeners();
+      showScreen(0);
+    }
+    initialize();
+  }
+
+  Game.prototype.slide = {
+    previous() {
+      showScreen(this.current - 1);
+    },
+    next() {
+      showScreen(this.current + 1);
+    },
+    get current() {
+      return currentScreen;
     }
   };
 
-  let currentScreen = 0;
-  initializeGame();
+  const game = new Game();
 
   function showScreen(number) {
     number = (number === screens.length) ? 0 : number;
@@ -41,12 +55,6 @@
     currentScreen = number;
     gameField.innerHTML = ``;
     gameField.appendChild(screens[number].cloneNode(true));
-  }
-
-  function initializeGame() {
-    createNavigationControls();
-    createNavigationListeners();
-    showScreen(0);
   }
 
   function createNavigationControls() {
