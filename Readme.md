@@ -1,7 +1,7 @@
 # Личный проект «Пиксель хантер» [![Build status][travis-image]][travis-url]
 
 * Студент: [Александр Бабченко](https://up.htmlacademy.ru/ecmascript/6/user/619357).
-* Наставник: `Неизвестно`.
+* Наставник: [Владимир Коршунов](https://up.htmlacademy.ru/ecmascript/6/user/83596).
 
 ---
 
