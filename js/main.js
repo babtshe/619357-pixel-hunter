@@ -29,11 +29,16 @@
   let currentScreen = INITIAL_SCREEN_ID;
 
   const showScreen = (number) => {
-    number = (number === screens.length) ? 0 : number;
-    number = (number < 0) ? screens.length - 1 : number;
-    currentScreen = number;
+    if (number < 0) {
+      currentScreen = screens.length - 1;
+    } else if (number > screens.length - 1) {
+      currentScreen = 0;
+    } else {
+      currentScreen = number;
+    }
+
     gameField.innerHTML = ``;
-    gameField.appendChild(screens[number].content.cloneNode(true));
+    gameField.appendChild(screens[currentScreen].content.cloneNode(true));
   };
 
   const createNavigationControls = () => {
@@ -50,14 +55,12 @@
 
   const onPreviousSlideClick = (evt) => {
     if (!evt.button) {
-      evt.preventDefault();
       showScreen(currentScreen - 1);
     }
   };
 
   const onNextSlideClick = (evt) => {
     if (!evt.button) {
-      evt.preventDefault();
       showScreen(currentScreen + 1);
     }
   };
@@ -65,11 +68,9 @@
   const onArrowKeyDown = (evt) => {
     switch (evt.keyCode) {
       case Key.LEFT:
-        evt.preventDefault();
         showScreen(currentScreen - 1);
         break;
       case Key.RIGHT:
-        evt.preventDefault();
         showScreen(currentScreen + 1);
         break;
     }
