@@ -37,7 +37,13 @@
       currentScreen = number;
     }
 
-    gameField.innerHTML = ``;
+    const clearElement = (elem) => {
+      while (elem.firstChild) {
+        elem.removeChild(elem.firstChild);
+      }
+    };
+
+    clearElement(gameField);
     const currentFragment = screens[currentScreen].content.cloneNode(true);
     gameField.appendChild(currentFragment);
   };
