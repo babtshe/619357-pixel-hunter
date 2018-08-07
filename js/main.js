@@ -1,8 +1,6 @@
 'use strict';
-(function () {
-  const gameField = document.querySelector(`#main`);
-  const screens = Array.from(document.querySelectorAll(`template`));
-  const INTRO_SCREEN_ID = `intro`;
+(() => {
+  const INITIAL_SCREEN_ID = 0;
   const Key = {
     LEFT: 37,
     RIGHT: 39
@@ -26,51 +24,45 @@
   <button class="arrows__btn"><-</button>
   <button class="arrows__btn">-></button>
 </div>`;
+  const gameField = document.querySelector(`#main`);
+  const screens = Array.from(document.querySelectorAll(`template`));
+  let currentScreen = INITIAL_SCREEN_ID;
 
-  let currentScreen = 0;
-  initialize();
-
-  function initialize() {
-    createNavigationControls();
-    createNavigationListeners();
-    showScreen(screens.map((elem) => elem.id).indexOf(INTRO_SCREEN_ID));
-  }
-
-  function showScreen(number) {
+  const showScreen = (number) => {
     number = (number === screens.length) ? 0 : number;
     number = (number < 0) ? screens.length - 1 : number;
     currentScreen = number;
     gameField.innerHTML = ``;
     gameField.appendChild(screens[number].content.cloneNode(true));
-  }
+  };
 
-  function createNavigationControls() {
+  const createNavigationControls = () => {
     let fragment = document.createRange().createContextualFragment(SLIDE_NAVIGATION_CONTROLS);
     document.body.appendChild(fragment);
-  }
+  };
 
-  function createNavigationListeners() {
+  const createNavigationListeners = () => {
     const arrowButtons = document.querySelectorAll(`.arrows__btn`);
     arrowButtons[0].addEventListener(`click`, onPreviousSlideClick);
     arrowButtons[1].addEventListener(`click`, onNextSlideClick);
     document.addEventListener(`keydown`, onArrowKeyDown);
-  }
+  };
 
-  function onPreviousSlideClick(evt) {
+  const onPreviousSlideClick = (evt) => {
     if (!evt.button) {
       evt.preventDefault();
       showScreen(currentScreen - 1);
     }
-  }
+  };
 
-  function onNextSlideClick(evt) {
+  const onNextSlideClick = (evt) => {
     if (!evt.button) {
       evt.preventDefault();
       showScreen(currentScreen + 1);
     }
-  }
+  };
 
-  function onArrowKeyDown(evt) {
+  const onArrowKeyDown = (evt) => {
     switch (evt.keyCode) {
       case Key.LEFT:
         evt.preventDefault();
@@ -81,5 +73,13 @@
         showScreen(currentScreen + 1);
         break;
     }
-  }
+  };
+
+  const initialize = () => {
+    createNavigationControls();
+    createNavigationListeners();
+    showScreen(currentScreen);
+  };
+
+  initialize();
 })();
