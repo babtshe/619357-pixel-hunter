@@ -75,11 +75,7 @@
     }
   };
 
-  const initialize = () => {
-    createNavigationControls();
-    createNavigationListeners();
-    showScreen(currentScreen);
-  };
-
-  initialize();
+  createNavigationControls();
+  createNavigationListeners();
+  showScreen(currentScreen);
 })();
