@@ -38,8 +38,8 @@
     }
 
     gameField.innerHTML = ``;
-    gameField.appendChild(screens[currentScreen]
-      .content.cloneNode(true));
+    const currentFragment = screens[currentScreen].content.cloneNode(true);
+    gameField.appendChild(currentFragment);
   };
 
 
