@@ -1,6 +1,6 @@
 'use strict';
 (function () {
-  const gameField = document.querySelector(`main.central`);
+  const gameField = document.querySelector(`#main`);
   const screens = Array.from(document.querySelectorAll(`template`), (elem) => elem.content);
   const Key = {
     LEFT: 37,
@@ -14,6 +14,7 @@
       top: 95px;
       left: 50%;
       margin-left: -56px;
+      z-index: 2;
     }
     .arrows__btn {
       background: none;
