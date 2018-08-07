@@ -1,7 +1,8 @@
 'use strict';
 (function () {
   const gameField = document.querySelector(`#main`);
-  const screens = Array.from(document.querySelectorAll(`template`), (elem) => elem.content);
+  const screens = Array.from(document.querySelectorAll(`template`));
+  const INTRO_SCREEN_ID = `intro`;
   const Key = {
     LEFT: 37,
     RIGHT: 39
@@ -25,37 +26,22 @@
   <button class="arrows__btn"><-</button>
   <button class="arrows__btn">-></button>
 </div>`;
+
   let currentScreen = 0;
+  initialize();
 
-  function Game() {
-    function initialize() {
-      createNavigationControls();
-      createNavigationListeners();
-      showScreen(0);
-    }
-    initialize();
+  function initialize() {
+    createNavigationControls();
+    createNavigationListeners();
+    showScreen(screens.map((elem) => elem.id).indexOf(INTRO_SCREEN_ID));
   }
-
-  Game.prototype.slide = {
-    previous() {
-      showScreen(this.current - 1);
-    },
-    next() {
-      showScreen(this.current + 1);
-    },
-    get current() {
-      return currentScreen;
-    }
-  };
-
-  const game = new Game();
 
   function showScreen(number) {
     number = (number === screens.length) ? 0 : number;
-    number = number < 0 ? screens.length - 1 : number;
+    number = (number < 0) ? screens.length - 1 : number;
     currentScreen = number;
     gameField.innerHTML = ``;
-    gameField.appendChild(screens[number].cloneNode(true));
+    gameField.appendChild(screens[number].content.cloneNode(true));
   }
 
   function createNavigationControls() {
@@ -73,14 +59,14 @@
   function onPreviousSlideClick(evt) {
     if (!evt.button) {
       evt.preventDefault();
-      game.slide.previous();
+      showScreen(currentScreen - 1);
     }
   }
 
   function onNextSlideClick(evt) {
     if (!evt.button) {
       evt.preventDefault();
-      game.slide.next();
+      showScreen(currentScreen + 1);
     }
   }
 
@@ -88,11 +74,11 @@
     switch (evt.keyCode) {
       case Key.LEFT:
         evt.preventDefault();
-        game.slide.previous();
+        showScreen(currentScreen - 1);
         break;
       case Key.RIGHT:
         evt.preventDefault();
-        game.slide.next();
+        showScreen(currentScreen + 1);
         break;
     }
   }
