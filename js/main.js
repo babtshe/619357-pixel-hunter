@@ -25,7 +25,15 @@
     RIGHT: 39
   };
   const gameField = document.querySelector(`#main`);
-  const screens = document.querySelectorAll(`template`);
+  const screens = [
+    `intro`,
+    `greeting`,
+    `rules`,
+    `game-1`,
+    `game-2`,
+    `game-3`,
+    `stats`
+  ].map((id) => document.querySelector(`template#${id}`));
   let currentScreen = INITIAL_SCREEN_ID;
 
   const clearElement = (elem) => {
@@ -35,14 +43,7 @@
   };
 
   const showScreen = (number) => {
-    if (number < 0) {
-      currentScreen = screens.length - 1;
-    } else if (number === screens.length) {
-      currentScreen = 0;
-    } else {
-      currentScreen = number;
-    }
-
+    currentScreen = Math.min(screens.length - 1, Math.max(0, number));
     clearElement(gameField);
     const currentFragment = screens[currentScreen].content.cloneNode(true);
     gameField.appendChild(currentFragment);
