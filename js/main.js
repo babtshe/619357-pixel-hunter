@@ -44,9 +44,11 @@
 
   const showScreen = (number) => {
     currentScreen = Math.min(screens.length - 1, Math.max(0, number));
-    clearElement(gameField);
-    const currentFragment = screens[currentScreen].content.cloneNode(true);
-    gameField.appendChild(currentFragment);
+    if (currentScreen === number) {
+      clearElement(gameField);
+      const currentFragment = screens[currentScreen].content.cloneNode(true);
+      gameField.appendChild(currentFragment);
+    }
   };
 
   const createNavigationControls = () => {
