@@ -33,7 +33,7 @@
     `game-2`,
     `game-3`,
     `stats`
-  ].map((id) => document.querySelector(`template#${id}`));
+  ].map((id) => document.querySelector(`#${id}`));
   let currentScreen = INITIAL_SCREEN_ID;
 
   const clearElement = (elem) => {
