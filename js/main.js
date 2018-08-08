@@ -28,6 +28,12 @@
   const screens = document.querySelectorAll(`template`);
   let currentScreen = INITIAL_SCREEN_ID;
 
+  const clearElement = (elem) => {
+    while (elem.firstChild) {
+      elem.removeChild(elem.firstChild);
+    }
+  };
+
   const showScreen = (number) => {
     if (number < 0) {
       currentScreen = screens.length - 1;
@@ -37,17 +43,10 @@
       currentScreen = number;
     }
 
-    const clearElement = (elem) => {
-      while (elem.firstChild) {
-        elem.removeChild(elem.firstChild);
-      }
-    };
-
     clearElement(gameField);
     const currentFragment = screens[currentScreen].content.cloneNode(true);
     gameField.appendChild(currentFragment);
   };
-
 
   const createNavigationControls = () => {
     const fragment = document.createRange()
