@@ -1,4 +1,3 @@
-'use strict';
 (() => {
   const INITIAL_SCREEN_ID = 0;
   const SLIDE_NAVIGATION_CONTROLS =
