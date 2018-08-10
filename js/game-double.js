@@ -60,16 +60,26 @@ const TEMPLATE = `
 const resultElement = {
   element: util.getElementFromString(TEMPLATE),
   init: (cbNextScreen)=> {
-    const restartGameElement = document.querySelector(`button.back`);
-    const nextScreenElement = document.querySelector(`input`);
-    const onNextScreenElementClick = () => {
+    util.initRestart(cbNextScreen);
+    const nextScreenElements = document.querySelectorAll(`input[type=radio]`);
+    let questionAnswered;
+    const onNextScreenElementClick = (evt) => {
+      if (questionAnswered && questionAnswered !== evt.target.name) {
+        finishLevel();
+      } else {
+        questionAnswered = evt.target.name;
+      }
+    };
+    const finishLevel = () => {
+      for (let elem of nextScreenElements) {
+        elem.removeEventListener(`click`, onNextScreenElementClick);
+      }
       cbNextScreen(true);
     };
-    const onRestartGameElementClick = () => {
-      cbNextScreen(false);
-    };
-    nextScreenElement.addEventListener(`click`, onNextScreenElementClick);
-    restartGameElement.addEventListener(`click`, onRestartGameElementClick);
+
+    for (let elem of nextScreenElements) {
+      elem.addEventListener(`click`, onNextScreenElementClick);
+    }
   }
 };
 

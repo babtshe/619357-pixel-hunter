@@ -115,11 +115,7 @@ const TEMPLATE = `
 const resultElement = {
   element: util.getElementFromString(TEMPLATE),
   init: (cbNextScreen)=> {
-    const restartGameElement = document.querySelector(`button.back`);
-    const onRestartGameElementClick = () => {
-      cbNextScreen(false);
-    };
-    restartGameElement.addEventListener(`click`, onRestartGameElementClick);
+    util.initRestart(cbNextScreen);
   }
 };
 

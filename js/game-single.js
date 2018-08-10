@@ -49,16 +49,17 @@ const TEMPLATE = `
 const resultElement = {
   element: util.getElementFromString(TEMPLATE),
   init: (cbNextScreen)=> {
-    const nextScreenElement = document.querySelector(`input`);
-    const restartGameElement = document.querySelector(`button.back`);
+    util.initRestart(cbNextScreen);
+    const nextScreenElements = document.querySelectorAll(`.game__answer`);
     const onNextScreenElementClick = () => {
+      for (let elem of nextScreenElements) {
+        elem.removeEventListener(`click`, onNextScreenElementClick);
+      }
       cbNextScreen(true);
     };
-    const onRestartGameElementClick = () => {
-      cbNextScreen(false);
-    };
-    nextScreenElement.addEventListener(`click`, onNextScreenElementClick);
-    restartGameElement.addEventListener(`click`, onRestartGameElementClick);
+    for (let elem of nextScreenElements) {
+      elem.addEventListener(`click`, onNextScreenElementClick);
+    }
   }
 };
 

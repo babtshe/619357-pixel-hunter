@@ -32,10 +32,10 @@ const ENTER_KEY = 13;
 const resultElement = {
   element: util.getElementFromString(TEMPLATE),
   init: (cbNextScreen)=> {
+    util.initRestart(cbNextScreen);
     const nextScreenElement = document.querySelector(`.rules__button`);
     const nameInputElement = document.querySelector(`.rules__input`);
     const savedName = localStorage.getItem(`pixelhunterName`);
-    const restartGameElement = document.querySelector(`button.back`);
     const onNameInputElementKeyup = () => {
       if (nameInputElement.value.length) {
         nextScreenElement.disabled = false;
@@ -57,9 +57,6 @@ const resultElement = {
       cbNextScreen(true);
       localStorage.setItem(`pixelhunterName`, nameInputElement.value);
     };
-    const onRestartGameElementClick = () => {
-      cbNextScreen(false);
-    };
     if (savedName) {
       nameInputElement.value = savedName;
       nextScreenElement.disabled = false;
@@ -67,7 +64,6 @@ const resultElement = {
     }
     nameInputElement.addEventListener(`keyup`, onNameInputElementKeyup);
     nextScreenElement.addEventListener(`click`, onNextScreenElementClick);
-    restartGameElement.addEventListener(`click`, onRestartGameElementClick);
   }
 };
 
