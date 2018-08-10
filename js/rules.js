@@ -35,32 +35,51 @@ const resultElement = {
     util.initRestart(cbNextScreen);
     const nextScreenElement = document.querySelector(`.rules__button`);
     const nameInputElement = document.querySelector(`.rules__input`);
-    const savedName = localStorage.getItem(`pixelhunterName`);
+
     const onNameInputElementKeyup = () => {
       if (nameInputElement.value.length) {
-        nextScreenElement.disabled = false;
-        document.addEventListener(`keypress`, onEnterKeypress);
+        enableSubmit();
       } else {
-        nextScreenElement.disabled = true;
-        document.removeEventListener(`keypress`, onEnterKeypress);
+        disableSubmit();
       }
     };
+
     const onEnterKeypress = (evt) => {
-      if (evt.keyCode === ENTER_KEY && nameInputElement.value) {
-        cbNextScreen(true);
-        document.removeEventListener(`keypress`, onEnterKeypress);
-        localStorage.setItem(`pixelhunterName`, nameInputElement.value);
+      if (evt.keyCode === ENTER_KEY && nameInputElement.value.length) {
+        openNextScreen(evt);
       }
     };
+
     const onNextScreenElementClick = (evt) => {
+      openNextScreen(evt);
+    };
+
+    const enableSubmit = () => {
+      nextScreenElement.disabled = false;
+      document.addEventListener(`keypress`, onEnterKeypress);
+    };
+
+    const disableSubmit = () => {
+      nextScreenElement.disabled = true;
+      document.removeEventListener(`keypress`, onEnterKeypress);
+    };
+
+    const openNextScreen = (evt) => {
       evt.preventDefault();
       cbNextScreen(true);
       localStorage.setItem(`pixelhunterName`, nameInputElement.value);
+      document.removeEventListener(`keypress`, onEnterKeypress);
     };
+
+    // Зачем заставлять пользователя вводить имя каждый раз? Пусть компьютер запоминает.
+    const savedName = localStorage.getItem(`pixelhunterName`);
     if (savedName) {
       nameInputElement.value = savedName;
       nextScreenElement.disabled = false;
+      nextScreenElement.focus();
       document.addEventListener(`keypress`, onEnterKeypress);
+    } else {
+      nameInputElement.focus();
     }
     nameInputElement.addEventListener(`keyup`, onNameInputElementKeyup);
     nextScreenElement.addEventListener(`click`, onNextScreenElementClick);
