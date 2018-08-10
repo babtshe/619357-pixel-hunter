@@ -112,6 +112,15 @@ const TEMPLATE = `
     </table>
   </section>`;
 
-const resultElement = util.getElementFromString(TEMPLATE);
+const resultElement = {
+  element: util.getElementFromString(TEMPLATE),
+  init: (cbNextScreen)=> {
+    const restartGameElement = document.querySelector(`button.back`);
+    const onRestartGameElementClick = () => {
+      cbNextScreen(false);
+    };
+    restartGameElement.addEventListener(`click`, onRestartGameElementClick);
+  }
+};
 
 export default resultElement;

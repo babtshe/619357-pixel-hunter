@@ -21,6 +21,15 @@ const TEMPLATE = `
     </button>
   </section>`;
 
-const resultElement = util.getElementFromString(TEMPLATE);
+const resultElement = {
+  element: util.getElementFromString(TEMPLATE),
+  init: (cbNextScreen)=> {
+    const nextScreenElement = document.querySelector(`.greeting__continue`);
+    const onNextScreenElementClick = () => {
+      cbNextScreen(true);
+    };
+    nextScreenElement.addEventListener(`click`, onNextScreenElementClick);
+  }
+};
 
 export default resultElement;

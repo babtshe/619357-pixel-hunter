@@ -46,6 +46,20 @@ const TEMPLATE = `
     </ul>
   </section>`;
 
-const resultElement = util.getElementFromString(TEMPLATE);
+const resultElement = {
+  element: util.getElementFromString(TEMPLATE),
+  init: (cbNextScreen)=> {
+    const nextScreenElement = document.querySelector(`input`);
+    const restartGameElement = document.querySelector(`button.back`);
+    const onNextScreenElementClick = () => {
+      cbNextScreen(true);
+    };
+    const onRestartGameElementClick = () => {
+      cbNextScreen(false);
+    };
+    nextScreenElement.addEventListener(`click`, onNextScreenElementClick);
+    restartGameElement.addEventListener(`click`, onRestartGameElementClick);
+  }
+};
 
 export default resultElement;

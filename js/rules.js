@@ -27,7 +27,48 @@ const TEMPLATE = `
       <button class="rules__button  continue" type="submit" disabled>Go!</button>
     </form>
   </section>`;
+const ENTER_KEY = 13;
 
-const resultElement = util.getElementFromString(TEMPLATE);
+const resultElement = {
+  element: util.getElementFromString(TEMPLATE),
+  init: (cbNextScreen)=> {
+    const nextScreenElement = document.querySelector(`.rules__button`);
+    const nameInputElement = document.querySelector(`.rules__input`);
+    const savedName = localStorage.getItem(`pixelhunterName`);
+    const restartGameElement = document.querySelector(`button.back`);
+    const onNameInputElementKeyup = () => {
+      if (nameInputElement.value.length) {
+        nextScreenElement.disabled = false;
+        document.addEventListener(`keypress`, onEnterKeypress);
+      } else {
+        nextScreenElement.disabled = true;
+        document.removeEventListener(`keypress`, onEnterKeypress);
+      }
+    };
+    const onEnterKeypress = (evt) => {
+      if (evt.keyCode === ENTER_KEY && nameInputElement.value) {
+        cbNextScreen(true);
+        document.removeEventListener(`keypress`, onEnterKeypress);
+        localStorage.setItem(`pixelhunterName`, nameInputElement.value);
+      }
+    };
+    const onNextScreenElementClick = (evt) => {
+      evt.preventDefault();
+      cbNextScreen(true);
+      localStorage.setItem(`pixelhunterName`, nameInputElement.value);
+    };
+    const onRestartGameElementClick = () => {
+      cbNextScreen(false);
+    };
+    if (savedName) {
+      nameInputElement.value = savedName;
+      nextScreenElement.disabled = false;
+      document.addEventListener(`keypress`, onEnterKeypress);
+    }
+    nameInputElement.addEventListener(`keyup`, onNameInputElementKeyup);
+    nextScreenElement.addEventListener(`click`, onNextScreenElementClick);
+    restartGameElement.addEventListener(`click`, onRestartGameElementClick);
+  }
+};
 
 export default resultElement;
