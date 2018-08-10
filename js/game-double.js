@@ -57,30 +57,23 @@ const TEMPLATE = `
     </ul>
   </section>`;
 
-const resultElement = {
-  element: util.getElementFromString(TEMPLATE),
-  init: (cbNextScreen)=> {
-    util.initRestart(cbNextScreen);
-    const nextScreenElements = document.querySelectorAll(`input[type=radio]`);
-    let questionAnswered;
-    const onNextScreenElementClick = (evt) => {
-      if (questionAnswered && questionAnswered !== evt.target.name) {
-        finishLevel();
-      } else {
-        questionAnswered = evt.target.name;
-      }
-    };
-    const finishLevel = () => {
-      for (let elem of nextScreenElements) {
-        elem.removeEventListener(`click`, onNextScreenElementClick);
-      }
-      cbNextScreen(true);
-    };
-
-    for (let elem of nextScreenElements) {
-      elem.addEventListener(`click`, onNextScreenElementClick);
-    }
+let questionAnswered = ``;
+const checkQuestion = (evt, cb) => {
+  if (questionAnswered.length && questionAnswered !== evt.target.name) {
+    cb(true);
+    questionAnswered = ``;
+  } else {
+    questionAnswered = evt.target.name;
   }
 };
 
-export default resultElement;
+const result = {
+  element: util.getElementFromString(TEMPLATE),
+  init: (cbNextScreen)=> {
+    const nextScreenElements = document.querySelectorAll(`input[type=radio]`);
+    util.initRestart(cbNextScreen);
+    util.initNextScreen(nextScreenElements, cbNextScreen, checkQuestion);
+  }
+};
+
+export default result;

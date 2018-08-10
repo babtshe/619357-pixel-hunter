@@ -28,62 +28,82 @@ const TEMPLATE = `
     </form>
   </section>`;
 const ENTER_KEY = 13;
+let userName = ``;
 
-const resultElement = {
+const initNameInput = (nextScreenElem) => {
+  const nameInputElement = document.querySelector(`.rules__input`);
+
+  const onNameInputElementKeyup = () => {
+    if (nameInputElement.value.length) {
+      enableSubmit();
+      userName = nameInputElement.value;
+    } else {
+      disableSubmit();
+    }
+  };
+
+  const enableSubmit = () => {
+    if (nextScreenElem.disabled) {
+      nextScreenElem.disabled = false;
+    }
+  };
+
+  const disableSubmit = () => {
+    if (!nextScreenElem.disabled) {
+      nextScreenElem.disabled = true;
+    }
+  };
+
+  // Зачем заставлять пользователя вводить имя каждый раз? Пусть компьютер запоминает.
+  const savedName = localStorage.getItem(`pixelhunterName`);
+  if (savedName) {
+    nameInputElement.value = savedName;
+    userName = nameInputElement.value;
+    nextScreenElem.disabled = false;
+    nextScreenElem.focus();
+  } else {
+    nameInputElement.focus();
+  }
+
+  nameInputElement.addEventListener(`keyup`, onNameInputElementKeyup);
+};
+
+// экспорт
+const result = {
   element: util.getElementFromString(TEMPLATE),
   init: (cbNextScreen)=> {
-    util.initRestart(cbNextScreen);
     const nextScreenElement = document.querySelector(`.rules__button`);
-    const nameInputElement = document.querySelector(`.rules__input`);
-
-    const onNameInputElementKeyup = () => {
-      if (nameInputElement.value.length) {
-        enableSubmit();
-      } else {
-        disableSubmit();
-      }
-    };
-
-    const onEnterKeypress = (evt) => {
-      if (evt.keyCode === ENTER_KEY && nameInputElement.value.length) {
-        openNextScreen(evt);
-      }
-    };
-
-    const onNextScreenElementClick = (evt) => {
-      openNextScreen(evt);
-    };
-
-    const enableSubmit = () => {
-      nextScreenElement.disabled = false;
-      document.addEventListener(`keypress`, onEnterKeypress);
-    };
-
-    const disableSubmit = () => {
-      nextScreenElement.disabled = true;
-      document.removeEventListener(`keypress`, onEnterKeypress);
-    };
+    util.initRestart(cbNextScreen);
 
     const openNextScreen = (evt) => {
       evt.preventDefault();
       cbNextScreen(true);
-      localStorage.setItem(`pixelhunterName`, nameInputElement.value);
+      localStorage.setItem(`pixelhunterName`, userName);
       document.removeEventListener(`keypress`, onEnterKeypress);
+      observer.disconnect();
     };
 
-    // Зачем заставлять пользователя вводить имя каждый раз? Пусть компьютер запоминает.
-    const savedName = localStorage.getItem(`pixelhunterName`);
-    if (savedName) {
-      nameInputElement.value = savedName;
-      nextScreenElement.disabled = false;
-      nextScreenElement.focus();
-      document.addEventListener(`keypress`, onEnterKeypress);
-    } else {
-      nameInputElement.focus();
-    }
-    nameInputElement.addEventListener(`keyup`, onNameInputElementKeyup);
-    nextScreenElement.addEventListener(`click`, onNextScreenElementClick);
+    const onEnterKeypress = (evt) => {
+      if (evt.keyCode === ENTER_KEY && userName.length) {
+        openNextScreen(evt);
+      }
+    };
+
+    // Чтобы избежать дублирования проверок, следим за изменениями кнопки Go!
+    const observer = new MutationObserver((mutations) => {
+      for (let elem of mutations) {
+        if (elem.target.disabled) {
+          document.removeEventListener(`keypress`, onEnterKeypress);
+        } else {
+          document.addEventListener(`keypress`, onEnterKeypress);
+        }
+      }
+    });
+    observer.observe(nextScreenElement, {attributes: true});
+    initNameInput(nextScreenElement);
+    util.initNextScreen(nextScreenElement, cbNextScreen, openNextScreen);
+
   }
 };
 
-export default resultElement;
+export default result;

@@ -112,11 +112,11 @@ const TEMPLATE = `
     </table>
   </section>`;
 
-const resultElement = {
+const result = {
   element: util.getElementFromString(TEMPLATE),
   init: (cbNextScreen)=> {
     util.initRestart(cbNextScreen);
   }
 };
 
-export default resultElement;
+export default result;

@@ -46,21 +46,17 @@ const TEMPLATE = `
     </ul>
   </section>`;
 
-const resultElement = {
+const result = {
   element: util.getElementFromString(TEMPLATE),
   init: (cbNextScreen)=> {
-    util.initRestart(cbNextScreen);
     const nextScreenElements = document.querySelectorAll(`.game__answer`);
-    const onNextScreenElementClick = () => {
-      for (let elem of nextScreenElements) {
-        elem.removeEventListener(`click`, onNextScreenElementClick);
-      }
+    util.initRestart(cbNextScreen);
+    const eventStopper = (evt) => {
+      evt.preventDefault();
       cbNextScreen(true);
     };
-    for (let elem of nextScreenElements) {
-      elem.addEventListener(`click`, onNextScreenElementClick);
-    }
+    util.initNextScreen(nextScreenElements, cbNextScreen, eventStopper);
   }
 };
 
-export default resultElement;
+export default result;

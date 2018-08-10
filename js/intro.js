@@ -5,15 +5,12 @@ const TEMPLATE = `
     <p class="intro__motto"><sup>*</sup> Это не фото. Это рисунок маслом нидерландского художника-фотореалиста Tjalf Sparnaay.</p>
   </section>`;
 
-const resultElement = {
+const result = {
   element: util.getElementFromString(TEMPLATE),
   init: (cbNextScreen)=> {
     const nextScreenElement = document.querySelector(`.intro__asterisk`);
-    const onNextScreenElementClick = () => {
-      cbNextScreen(true);
-    };
-    nextScreenElement.addEventListener(`click`, onNextScreenElementClick);
+    util.initNextScreen(nextScreenElement, cbNextScreen);
   }
 };
 
-export default resultElement;
+export default result;
