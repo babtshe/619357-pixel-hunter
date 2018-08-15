@@ -67,13 +67,20 @@ const checkQuestion = (evt, cb) => {
   }
 };
 
+const gameInit = (cb) => {
+  util.initRestart(cb);
+  const nextScreenElements = document.querySelectorAll(`input[type=radio]`);
+  const onNextScreenElementClick = (evt) => {
+    checkQuestion(evt, cb);
+  };
+  for (let elem of nextScreenElements) {
+    elem.addEventListener(`click`, onNextScreenElementClick);
+  }
+};
+
 const result = {
   element: util.getElementFromString(TEMPLATE),
-  init: (cbNextScreen)=> {
-    const nextScreenElements = document.querySelectorAll(`input[type=radio]`);
-    util.initRestart(cbNextScreen);
-    util.initNextScreen(nextScreenElements, cbNextScreen, checkQuestion);
-  }
+  init: (cbNextScreen)=> gameInit(cbNextScreen)
 };
 
 export default result;

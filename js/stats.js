@@ -112,11 +112,11 @@ const TEMPLATE = `
     </table>
   </section>`;
 
+const statsInit = (cb) => util.initRestart(cb);
+
 const result = {
   element: util.getElementFromString(TEMPLATE),
-  init: (cbNextScreen)=> {
-    util.initRestart(cbNextScreen);
-  }
+  init: (cbNextScreen)=> statsInit(cbNextScreen)
 };
 
 export default result;

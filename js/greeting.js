@@ -21,12 +21,17 @@ const TEMPLATE = `
     </button>
   </section>`;
 
+const greetingInit = (cb) => {
+  const nextScreenElement = document.querySelector(`.greeting__continue`);
+  const onNextScreenElementClick = () => {
+    cb(true);
+  };
+  nextScreenElement.addEventListener(`click`, onNextScreenElementClick);
+};
+
 const result = {
   element: util.getElementFromString(TEMPLATE),
-  init: (cbNextScreen)=> {
-    const nextScreenElement = document.querySelector(`.greeting__continue`);
-    util.initNextScreen(nextScreenElement, cbNextScreen);
-  }
+  init: (cbNextScreen)=> greetingInit(cbNextScreen)
 };
 
 export default result;

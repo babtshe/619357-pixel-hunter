@@ -27,83 +27,42 @@ const TEMPLATE = `
       <button class="rules__button  continue" type="submit" disabled>Go!</button>
     </form>
   </section>`;
-const ENTER_KEY = 13;
-let userName = ``;
 
-const initNameInput = (nextScreenElem) => {
-  const nameInputElement = document.querySelector(`.rules__input`);
-
-  const onNameInputElementKeyup = () => {
-    if (nameInputElement.value.length) {
-      enableSubmit();
-      userName = nameInputElement.value;
-    } else {
-      disableSubmit();
-    }
-  };
-
-  const enableSubmit = () => {
-    if (nextScreenElem.disabled) {
-      nextScreenElem.disabled = false;
-    }
-  };
-
-  const disableSubmit = () => {
-    if (!nextScreenElem.disabled) {
-      nextScreenElem.disabled = true;
-    }
-  };
-
-  // Зачем заставлять пользователя вводить имя каждый раз? Пусть компьютер запоминает.
+const loadSavedName = (inputElement, submitElement) => {
   const savedName = localStorage.getItem(`pixelhunterName`);
   if (savedName) {
-    nameInputElement.value = savedName;
-    userName = nameInputElement.value;
-    nextScreenElem.disabled = false;
-    nextScreenElem.focus();
-  } else {
-    nameInputElement.focus();
+    inputElement.value = savedName;
+    submitElement.disabled = false;
   }
-
-  nameInputElement.addEventListener(`keyup`, onNameInputElementKeyup);
+  inputElement.focus();
 };
 
-// экспорт
+const rulesInit = (cb) => {
+  const nextScreenElement = document.querySelector(`.rules__form`);
+  const submitButton = document.querySelector(`.rules__button`);
+  const nameInputElement = document.querySelector(`.rules__input`);
+  util.initRestart(cb);
+  // загружает имя пользователя, если он уже вводил его когда-то.
+  loadSavedName(nameInputElement, submitButton);
+
+  const onNameInputElementKeyup = () => {
+    submitButton.disabled = !nameInputElement.value.length;
+  };
+
+  const onNextScreenElementSubmit = (evt) => {
+    evt.preventDefault();
+    // сохраняет имя пользователя, чтобы не вводить заново при новой игре
+    localStorage.setItem(`pixelhunterName`, nameInputElement.value);
+    cb(true);
+  };
+
+  nameInputElement.addEventListener(`keyup`, onNameInputElementKeyup);
+  nextScreenElement.addEventListener(`submit`, onNextScreenElementSubmit);
+};
+
 const result = {
   element: util.getElementFromString(TEMPLATE),
-  init: (cbNextScreen)=> {
-    const nextScreenElement = document.querySelector(`.rules__button`);
-    util.initRestart(cbNextScreen);
-
-    const openNextScreen = (evt) => {
-      evt.preventDefault();
-      cbNextScreen(true);
-      localStorage.setItem(`pixelhunterName`, userName);
-      document.removeEventListener(`keypress`, onEnterKeypress);
-      observer.disconnect();
-    };
-
-    const onEnterKeypress = (evt) => {
-      if (evt.keyCode === ENTER_KEY && userName.length) {
-        openNextScreen(evt);
-      }
-    };
-
-    // Чтобы избежать дублирования проверок, следим за изменениями кнопки Go!
-    const observer = new MutationObserver((mutations) => {
-      for (let elem of mutations) {
-        if (elem.target.disabled) {
-          document.removeEventListener(`keypress`, onEnterKeypress);
-        } else {
-          document.addEventListener(`keypress`, onEnterKeypress);
-        }
-      }
-    });
-    observer.observe(nextScreenElement, {attributes: true});
-    initNameInput(nextScreenElement);
-    util.initNextScreen(nextScreenElement, cbNextScreen, openNextScreen);
-
-  }
+  init: (cbNextScreen)=> rulesInit(cbNextScreen)
 };
 
 export default result;
