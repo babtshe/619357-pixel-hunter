@@ -57,22 +57,17 @@ const TEMPLATE = `
     </ul>
   </section>`;
 
-let questionAnswered = ``;
-const checkQuestion = (evt, cb) => {
-  if (questionAnswered.length && questionAnswered !== evt.target.name) {
-    cb(true);
-    questionAnswered = ``;
-  } else {
-    questionAnswered = evt.target.name;
-  }
-};
-
 const gameInit = (cb) => {
   util.initRestart(cb);
   const nextScreenElements = document.querySelectorAll(`input[type=radio]`);
-  const onNextScreenElementClick = (evt) => {
-    checkQuestion(evt, cb);
+
+  const onNextScreenElementClick = () => {
+    const questionsAnswered = [...nextScreenElements].filter((item) => item.checked);
+    if (questionsAnswered.length > 1) {
+      cb(true);
+    }
   };
+
   for (let elem of nextScreenElements) {
     elem.addEventListener(`click`, onNextScreenElementClick);
   }
