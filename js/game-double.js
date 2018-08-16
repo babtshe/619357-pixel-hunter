@@ -56,6 +56,7 @@ const TEMPLATE = `
       <li class="stats__result stats__result--unknown"></li>
     </ul>
   </section>`;
+const QUESTION_COUNT = 2;
 
 const gameInit = (cb) => {
   util.initRestart(cb);
@@ -63,7 +64,7 @@ const gameInit = (cb) => {
 
   const onNextScreenElementClick = () => {
     const questionsAnswered = [...nextScreenElements].filter((item) => item.checked);
-    if (questionsAnswered.length > 1) {
+    if (questionsAnswered.length === QUESTION_COUNT) {
       cb(true);
     }
   };
