@@ -48,12 +48,12 @@ const TEMPLATE = `
 
 const gameInit = (cb) => {
   util.initRestart(cb);
-  const answerRadios = document.querySelectorAll(`.game__answer`);
+  const gameOptions = document.querySelectorAll(`.game__answer`);
   const onAnswerRadioClick = (evt) => {
     evt.preventDefault();
     cb(true);
   };
-  for (let item of answerRadios) {
+  for (let item of gameOptions) {
     item.addEventListener(`click`, onAnswerRadioClick);
   }
 };

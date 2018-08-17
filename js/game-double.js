@@ -60,16 +60,16 @@ const QUESTION_COUNT = 2;
 
 const gameInit = (cb) => {
   util.initRestart(cb);
-  const answerRadios = document.querySelectorAll(`input[type=radio]`);
+  const gameOptions = document.querySelectorAll(`input[type=radio]`);
 
   const onAnswerRadioClick = () => {
-    const questionsAnswered = [...answerRadios].filter((item) => item.checked);
+    const questionsAnswered = [...gameOptions].filter((item) => item.checked);
     if (questionsAnswered.length === QUESTION_COUNT) {
       cb(true);
     }
   };
 
-  for (let item of answerRadios) {
+  for (let item of gameOptions) {
     item.addEventListener(`click`, onAnswerRadioClick);
   }
 };
