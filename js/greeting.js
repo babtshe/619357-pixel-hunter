@@ -22,11 +22,11 @@ const TEMPLATE = `
   </section>`;
 
 const greetingInit = (cb) => {
-  const nextScreenElement = document.querySelector(`.greeting__continue`);
-  const onNextScreenElementClick = () => {
+  const continueButton = document.querySelector(`.greeting__continue`);
+  const onContinueButtonClick = () => {
     cb(true);
   };
-  nextScreenElement.addEventListener(`click`, onNextScreenElementClick);
+  continueButton.addEventListener(`click`, onContinueButtonClick);
 };
 
 const result = {

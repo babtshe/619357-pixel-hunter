@@ -46,12 +46,12 @@ const TEMPLATE = `
 
 const gameInit = (cb) => {
   util.initRestart(cb);
-  const nextScreenElements = document.querySelectorAll(`.game__option`);
-  const onNextScreenElementClick = () => {
+  const gameOptions = document.querySelectorAll(`.game__option`);
+  const onGameOptionClick = () => {
     cb(true);
   };
-  for (let elem of nextScreenElements) {
-    elem.addEventListener(`click`, onNextScreenElementClick);
+  for (let elem of gameOptions) {
+    elem.addEventListener(`click`, onGameOptionClick);
   }
 };
 

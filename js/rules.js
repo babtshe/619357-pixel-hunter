@@ -28,36 +28,36 @@ const TEMPLATE = `
     </form>
   </section>`;
 
-const loadSavedName = (inputElement, submitElement) => {
+const loadSavedName = (inputField, submitButton) => {
   const savedName = localStorage.getItem(`pixelhunterName`);
   if (savedName) {
-    inputElement.value = savedName;
-    submitElement.disabled = false;
+    inputField.value = savedName;
+    submitButton.disabled = false;
   }
-  inputElement.focus();
+  inputField.focus();
 };
 
 const rulesInit = (cb) => {
-  const nextScreenElement = document.querySelector(`.rules__form`);
+  const form = document.querySelector(`.rules__form`);
   const submitButton = document.querySelector(`.rules__button`);
-  const nameInputElement = document.querySelector(`.rules__input`);
+  const nameInput = document.querySelector(`.rules__input`);
   util.initRestart(cb);
   // загружает имя пользователя, если он уже вводил его когда-то.
-  loadSavedName(nameInputElement, submitButton);
+  loadSavedName(nameInput, submitButton);
 
-  const onNameInputElementKeyup = () => {
-    submitButton.disabled = !nameInputElement.value.length;
+  const onNameInputKeyup = () => {
+    submitButton.disabled = !nameInput.value.length;
   };
 
-  const onNextScreenElementSubmit = (evt) => {
+  const onFormSubmit = (evt) => {
     evt.preventDefault();
     // сохраняет имя пользователя, чтобы не вводить заново при новой игре
-    localStorage.setItem(`pixelhunterName`, nameInputElement.value);
+    localStorage.setItem(`pixelhunterName`, nameInput.value);
     cb(true);
   };
 
-  nameInputElement.addEventListener(`keyup`, onNameInputElementKeyup);
-  nextScreenElement.addEventListener(`submit`, onNextScreenElementSubmit);
+  nameInput.addEventListener(`keyup`, onNameInputKeyup);
+  form.addEventListener(`submit`, onFormSubmit);
 };
 
 const result = {

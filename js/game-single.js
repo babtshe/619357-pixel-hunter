@@ -48,13 +48,13 @@ const TEMPLATE = `
 
 const gameInit = (cb) => {
   util.initRestart(cb);
-  const nextScreenElements = document.querySelectorAll(`.game__answer`);
-  const onNextScreenElementClick = (evt) => {
+  const answerRadios = document.querySelectorAll(`.game__answer`);
+  const onAnswerRadioClick = (evt) => {
     evt.preventDefault();
     cb(true);
   };
-  for (let elem of nextScreenElements) {
-    elem.addEventListener(`click`, onNextScreenElementClick);
+  for (let elem of answerRadios) {
+    elem.addEventListener(`click`, onAnswerRadioClick);
   }
 };
 

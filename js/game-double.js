@@ -60,17 +60,17 @@ const QUESTION_COUNT = 2;
 
 const gameInit = (cb) => {
   util.initRestart(cb);
-  const nextScreenElements = document.querySelectorAll(`input[type=radio]`);
+  const answerRadios = document.querySelectorAll(`input[type=radio]`);
 
-  const onNextScreenElementClick = () => {
-    const questionsAnswered = [...nextScreenElements].filter((item) => item.checked);
+  const onAnswerRadioClick = () => {
+    const questionsAnswered = [...answerRadios].filter((item) => item.checked);
     if (questionsAnswered.length === QUESTION_COUNT) {
       cb(true);
     }
   };
 
-  for (let elem of nextScreenElements) {
-    elem.addEventListener(`click`, onNextScreenElementClick);
+  for (let elem of answerRadios) {
+    elem.addEventListener(`click`, onAnswerRadioClick);
   }
 };
 

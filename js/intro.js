@@ -6,11 +6,11 @@ const TEMPLATE = `
   </section>`;
 
 const introInit = (cb) => {
-  const nextScreenElement = document.querySelector(`.intro__asterisk`);
-  const onNextScreenElementClick = () => {
+  const introButton = document.querySelector(`.intro__asterisk`);
+  const onIntroButtonClick = () => {
     cb(true);
   };
-  nextScreenElement.addEventListener(`click`, onNextScreenElementClick);
+  introButton.addEventListener(`click`, onIntroButtonClick);
 };
 
 const result = {
