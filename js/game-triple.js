@@ -50,8 +50,8 @@ const gameInit = (cb) => {
   const onGameOptionClick = () => {
     cb(true);
   };
-  for (let elem of gameOptions) {
-    elem.addEventListener(`click`, onGameOptionClick);
+  for (let item of gameOptions) {
+    item.addEventListener(`click`, onGameOptionClick);
   }
 };
 

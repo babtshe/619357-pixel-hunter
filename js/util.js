@@ -3,9 +3,9 @@ const util = {
     return document.createRange().createContextualFragment(value);
   },
 
-  clearElement: (elem) => {
-    while (elem.firstChild) {
-      elem.removeChild(elem.firstChild);
+  clearElement: (item) => {
+    while (item.firstChild) {
+      item.removeChild(item.firstChild);
     }
   },
 

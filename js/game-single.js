@@ -53,8 +53,8 @@ const gameInit = (cb) => {
     evt.preventDefault();
     cb(true);
   };
-  for (let elem of answerRadios) {
-    elem.addEventListener(`click`, onAnswerRadioClick);
+  for (let item of answerRadios) {
+    item.addEventListener(`click`, onAnswerRadioClick);
   }
 };
 
