@@ -45,7 +45,7 @@ const rulesInit = (cb) => {
   // загружает имя пользователя, если он уже вводил его когда-то.
   loadSavedName(nameInput, submitButton);
 
-  const onNameInputKeyup = () => {
+  const onNameInputInput = () => {
     submitButton.disabled = !nameInput.value.length;
   };
 
@@ -56,7 +56,7 @@ const rulesInit = (cb) => {
     cb(true);
   };
 
-  nameInput.addEventListener(`keyup`, onNameInputKeyup);
+  nameInput.addEventListener(`input`, onNameInputInput);
   form.addEventListener(`submit`, onFormSubmit);
 };
 
