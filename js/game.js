@@ -1,15 +1,23 @@
-const AnswerType = {
-  WRONG: 0,
-  SLOW: 1,
-  NORMAL: 2,
-  FAST: 3
+const Answer = {
+  Type: {
+    WRONG: 0,
+    SLOW: 1,
+    NORMAL: 2,
+    FAST: 3
+  },
+  Timing: {
+    WRONG: 0,
+    SLOW: 10,
+    NORMAL: 20
+  }
 };
-const AnswerTiming = {
-  WRONG: 0,
-  SLOW: 10,
-  NORMAL: 20
+const Level = {
+  INITIAL: 0,
+  MAX: 9
 };
+
 // const MAX_LIVES = 3;
+// const TIME = 30;
 const POINT_COST = 50;
 
 const calculateScores = (answers, lives) => {
@@ -20,21 +28,37 @@ const calculateScores = (answers, lives) => {
   return result;
 };
 
+const calculateLives = (currentValue, answerType) => {
+  return currentValue - !answerType;
+};
+
 const calculateAnswerType = (timeLeft) => {
-  if (timeLeft <= AnswerTiming.WRONG) {
-    return AnswerType.WRONG;
-  } else if (timeLeft < AnswerTiming.SLOW) {
-    return AnswerType.SLOW;
-  } else if (timeLeft <= AnswerTiming.NORMAL) {
-    return AnswerType.NORMAL;
+  if (timeLeft <= Answer.Timing.WRONG) {
+    return Answer.Type.WRONG;
+  } else if (timeLeft < Answer.Timing.SLOW) {
+    return Answer.Type.SLOW;
+  } else if (timeLeft <= Answer.Timing.NORMAL) {
+    return Answer.Type.NORMAL;
   } else {
-    return AnswerType.FAST;
+    return Answer.Type.FAST;
   }
+};
+
+const changeLevel = (value) => {
+  if (value <= Level.INITIAL) {
+    return Level.INITIAL;
+  }
+  if (value >= Level.MAX) {
+    return Level.MAX;
+  }
+  return value;
 };
 
 const game = {
   calculateScores: (answers, lives) => calculateScores(answers, lives),
-  calculateAnswerType: (time) => calculateAnswerType(time)
+  calculateLives: (current, answer) => calculateLives(current, answer),
+  calculateAnswerType: (time) => calculateAnswerType(time),
+  changeLevel: (id) => changeLevel(id)
 };
 
 export default game;

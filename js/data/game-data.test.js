@@ -19,13 +19,19 @@ describe(`Scores count`, () => {
   });
 });
 
-// describe(`Player lives`, () => {
-//   it(`should return 0 if no lifes left`, () => {
-//     assert.equal(game.lives());
-//   });
-// });
+describe(`Lives count`, () => {
+  it(`should return 0 if right answer and no lifes left`, () => {
+    assert.equal(game.calculateLives(1, 0), 0);
+  });
+  it(`should return -1 if wrong answer and no lives left`, () => {
+    assert.equal(game.calculateLives(0, 0), -1);
+  });
+  it(`should return 3 if right answer and max lives left`, () => {
+    assert.equal(game.calculateLives(3, 1), 3);
+  });
+});
 
-describe(`game timer`, () => {
+describe(`Answer value based on answer speed`, () => {
   it(`should return answer type 0 if time runs out`, () => {
     assert.equal(game.calculateAnswerType(0), 0);
     assert.equal(game.calculateAnswerType(-1), 0);
@@ -42,5 +48,19 @@ describe(`game timer`, () => {
     assert.equal(game.calculateAnswerType(10), 2);
     assert.equal(game.calculateAnswerType(15), 2);
     assert.equal(game.calculateAnswerType(20), 2);
+  });
+});
+
+describe(`Game change levels`, () => {
+  it(`should return maxLevel if value >= maxLevel`, () => {
+    assert.equal(game.changeLevel(9), 9);
+    assert.equal(game.changeLevel(10), 9);
+  });
+  it(`should return 0 if value <= minLevel`, ()=>{
+    assert.equal(game.changeLevel(0), 0);
+    assert.equal(game.changeLevel(-1), 0);
+  });
+  it(`should return 5 if value is 5`, ()=>{
+    assert.equal(game.changeLevel(5), 5);
   });
 });
