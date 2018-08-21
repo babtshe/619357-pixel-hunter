@@ -20,7 +20,7 @@ const Level = {
 // const TIME = 30;
 const POINT_COST = 50;
 
-const calculateScores = (answers, lives) => {
+export const calculateScores = (answers, lives) => {
   if (lives < 0) {
     return 0;
   }
@@ -28,23 +28,24 @@ const calculateScores = (answers, lives) => {
   return result;
 };
 
-const calculateLives = (currentValue, answerType) => {
+export const calculateLives = (currentValue, answerType) => {
   return currentValue - !answerType;
 };
 
-const calculateAnswerType = (timeLeft) => {
+export const calculateAnswerType = (timeLeft) => {
   if (timeLeft <= Answer.Timing.WRONG) {
     return Answer.Type.WRONG;
-  } else if (timeLeft < Answer.Timing.SLOW) {
-    return Answer.Type.SLOW;
-  } else if (timeLeft <= Answer.Timing.NORMAL) {
-    return Answer.Type.NORMAL;
-  } else {
-    return Answer.Type.FAST;
   }
+  if (timeLeft < Answer.Timing.SLOW) {
+    return Answer.Type.SLOW;
+  }
+  if (timeLeft <= Answer.Timing.NORMAL) {
+    return Answer.Type.NORMAL;
+  }
+  return Answer.Type.FAST;
 };
 
-const changeLevel = (value) => {
+export const changeLevel = (value) => {
   if (value <= Level.INITIAL) {
     return Level.INITIAL;
   }
@@ -53,12 +54,3 @@ const changeLevel = (value) => {
   }
   return value;
 };
-
-const game = {
-  calculateScores: (answers, lives) => calculateScores(answers, lives),
-  calculateLives: (current, answer) => calculateLives(current, answer),
-  calculateAnswerType: (time) => calculateAnswerType(time),
-  changeLevel: (id) => changeLevel(id)
-};
-
-export default game;

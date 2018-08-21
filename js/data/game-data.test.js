@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import game from '../game';
+import * as game from '../game';
 
 describe(`Scores count`, () => {
   it(`should return 0 if less than 0 lives`, () => {
