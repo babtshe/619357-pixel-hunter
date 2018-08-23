@@ -31,11 +31,11 @@ export const calculateLives = (currentValue, answerType) => {
 };
 
 export const calculateTimeLeft = (game, time) => {
-  if (time >= game.timer) {
-    const newGame = Object.assign({}, game, {timer: 0});
-    return newGame;
+  if (!time) {
+    return game;
   }
-  const newGame = Object.assign({}, game, {timer: game.timer - time});
+  const timeLeft = Math.max(0, game.timer - time);
+  const newGame = Object.assign({}, game, {timer: timeLeft});
   return newGame;
 };
 
