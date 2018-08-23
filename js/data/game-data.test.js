@@ -3,19 +3,19 @@ import * as game from '../game';
 
 describe(`Scores count`, () => {
   it(`should return 0 if less than 0 lives`, () => {
-    assert.equal(game.calculateScores([3, 3, 3, 0, 0, 2, 1, 0, 0, 2], -1), 0);
+    assert.equal(game.calculateScores([3, 3, 3, 0, 0, 2, 1, 0, 0, 2], -1, game.INITIAL_GAME), 0);
   });
   it(`should return 1650 if maximum score`, () =>{
-    assert.equal(game.calculateScores([3, 3, 3, 3, 3, 3, 3, 3, 3, 3], 3), 1650);
+    assert.equal(game.calculateScores([3, 3, 3, 3, 3, 3, 3, 3, 3, 3], 3, game.INITIAL_GAME), 1650);
   });
   it(`should return 350 if minimum score`, () =>{
-    assert.equal(game.calculateScores([0, 0, 0, 1, 1, 1, 1, 1, 1, 1], 0), 350);
+    assert.equal(game.calculateScores([0, 0, 0, 1, 1, 1, 1, 1, 1, 1], 0, game.INITIAL_GAME), 350);
   });
   it(`should return 0 if all answers are wrong`, () => {
-    assert.equal(game.calculateScores([0, 0, 0, 0], -1), 0);
+    assert.equal(game.calculateScores([0, 0, 0, 0], -1), 0, game.INITIAL_GAME);
   });
   it(`should return 850 if all types of answers are present`, () => {
-    assert.equal(game.calculateScores([3, 2, 1, 0, 2, 3, 0, 1, 3, 1], 1), 850);
+    assert.equal(game.calculateScores([3, 2, 1, 0, 2, 3, 0, 1, 3, 1], 1, game.INITIAL_GAME), 850);
   });
 });
 
@@ -53,14 +53,14 @@ describe(`Answer value based on answer speed`, () => {
 
 describe(`Game change levels`, () => {
   it(`should return maxLevel if value >= maxLevel`, () => {
-    assert.equal(game.changeLevel(9), 9);
-    assert.equal(game.changeLevel(10), 9);
+    assert.equal(game.changeLevel(game.INITIAL_GAME, 9).level.current, 9);
+    assert.equal(game.changeLevel(game.INITIAL_GAME, 10).level.current, 9);
   });
   it(`should return 0 if value <= minLevel`, ()=>{
-    assert.equal(game.changeLevel(0), 0);
-    assert.equal(game.changeLevel(-1), 0);
+    assert.equal(game.changeLevel(game.INITIAL_GAME, 0).level.current, 0);
+    assert.equal(game.changeLevel(game.INITIAL_GAME, -1).level.current, 0);
   });
   it(`should return 5 if value is 5`, ()=>{
-    assert.equal(game.changeLevel(5), 5);
+    assert.equal(game.changeLevel(game.INITIAL_GAME, 5).level.current, 5);
   });
 });

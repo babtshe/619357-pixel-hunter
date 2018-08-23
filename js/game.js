@@ -11,25 +11,49 @@ const Answer = {
     NORMAL: 20
   }
 };
-const Level = {
-  INITIAL: 0,
-  MAX: 9
+export const INITIAL_GAME = {
+  timer: 30,
+  pointCost: 50,
+  lives: 3,
+  level: {
+    current: 0,
+    max: 9
+  }
 };
 
-// const MAX_LIVES = 3;
-// const TIME = 30;
-const POINT_COST = 50;
-
-export const calculateScores = (answers, lives) => {
+export const calculateScores = (answers, lives, game) => {
   if (lives < 0) {
     return 0;
   }
-  const result = (answers.reduce((accumulator, item) => accumulator + item) + lives) * POINT_COST;
+  const result = (answers.reduce((accumulator, item) => accumulator + item) + lives) * game.pointCost;
   return result;
 };
 
 export const calculateLives = (currentValue, answerType) => {
   return currentValue - !answerType;
+};
+
+// display - элемент в котором показываем обратный отсчёт,
+// callback - функция, которая отвечает за обработку ответа игрока.
+export const timer = {
+  start(display, callback, game) {
+    this._value = game.timer;
+    display.textContent = this._value;
+    this._id = setInterval(() => {
+      this._value--;
+      display.textContent = this._value;
+      if (this._value === 0) {
+        clearInterval(this._id);
+        callback(this._value);
+      }
+    }, 1000);
+  },
+  stop() {
+    clearInterval(this._id);
+    return this._value;
+  },
+  _id: 0,
+  _value: 0
 };
 
 export const calculateAnswerType = (timeLeft) => {
@@ -45,12 +69,18 @@ export const calculateAnswerType = (timeLeft) => {
   return Answer.Type.FAST;
 };
 
-export const changeLevel = (value) => {
-  if (value <= Level.INITIAL) {
-    return Level.INITIAL;
+export const changeLevel = (game, value) => {
+  let returnValue = value;
+  if (value <= game.level.current) {
+    returnValue = game.level.current;
   }
-  if (value >= Level.MAX) {
-    return Level.MAX;
+  if (value >= game.level.max) {
+    returnValue = game.level.max;
   }
-  return value;
+  const newGame = Object.assign({}, game, {
+    level: Object.assign({}, game.level, {
+      current: returnValue
+    })
+  });
+  return newGame;
 };
