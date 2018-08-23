@@ -30,7 +30,6 @@
     "gulp-sourcemaps": "2.6.4",
     "gulp-svgstore": "6.1.1",
     "rollup-plugin-commonjs": "9.1.5",
-    "sinon": "6.1.5",
     "stylelint": "9.4.x",
     "stylelint-config-htmlacademy": "0.1.x"
   },

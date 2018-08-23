@@ -15,10 +15,7 @@ export const INITIAL_GAME = {
   timer: 30,
   pointCost: 50,
   lives: 3,
-  level: {
-    current: 0,
-    max: 9
-  }
+  level: 0
 };
 
 export const calculateScores = (answers, lives, game) => {
@@ -33,31 +30,13 @@ export const calculateLives = (currentValue, answerType) => {
   return currentValue - !answerType;
 };
 
-// display - элемент в котором показываем обратный отсчёт,
-// callback - функция, которая отвечает за обработку ответа игрока.
-export const timer = {
-  start(game, callback, display) {
-    this._value = game.timer;
-    if (display) {
-      display.textContent = this._value;
-    }
-    this._id = setInterval(() => {
-      this._value--;
-      if (display) {
-        display.textContent = this._value;
-      }
-      if (this._value === 0) {
-        clearInterval(this._id);
-        callback(this._value);
-      }
-    }, 1000);
-  },
-  stop() {
-    clearInterval(this._id);
-    return this._value;
-  },
-  _id: 0,
-  _value: 0
+export const calculateTimeLeft = (game, time) => {
+  if (time >= game.timer) {
+    const newGame = Object.assign({}, game, {timer: 0});
+    return newGame;
+  }
+  const newGame = Object.assign({}, game, {timer: game.timer - time});
+  return newGame;
 };
 
 export const calculateAnswerType = (timeLeft) => {
@@ -73,18 +52,10 @@ export const calculateAnswerType = (timeLeft) => {
   return Answer.Type.FAST;
 };
 
-export const changeLevel = (game, value) => {
-  let returnValue = value;
-  if (value <= game.level.current) {
-    returnValue = game.level.current;
+export const changeLevel = (game, level) => {
+  if (level <= game.level) {
+    return game;
   }
-  if (value >= game.level.max) {
-    returnValue = game.level.max;
-  }
-  const newGame = Object.assign({}, game, {
-    level: Object.assign({}, game.level, {
-      current: returnValue
-    })
-  });
+  const newGame = Object.assign({}, game, {level});
   return newGame;
 };

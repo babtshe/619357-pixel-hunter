@@ -1,4 +1,3 @@
-import {useFakeTimers} from 'sinon';
 import {assert} from 'chai';
 import * as game from '../game';
 
@@ -53,47 +52,23 @@ describe(`Answer value based on answer speed`, () => {
 });
 
 describe(`Game change levels`, () => {
-  it(`should return maxLevel if value >= maxLevel`, () => {
-    assert.equal(game.changeLevel(game.INITIAL_GAME, 9).level.current, 9);
-    assert.equal(game.changeLevel(game.INITIAL_GAME, 10).level.current, 9);
-  });
   it(`should return 0 if value <= minLevel`, ()=>{
-    assert.equal(game.changeLevel(game.INITIAL_GAME, 0).level.current, 0);
-    assert.equal(game.changeLevel(game.INITIAL_GAME, -1).level.current, 0);
+    assert.equal(game.changeLevel(game.INITIAL_GAME, 0).level, 0);
+    assert.equal(game.changeLevel(game.INITIAL_GAME, -1).level, 0);
   });
   it(`should return 5 if value is 5`, ()=>{
-    assert.equal(game.changeLevel(game.INITIAL_GAME, 5).level.current, 5);
+    assert.equal(game.changeLevel(game.INITIAL_GAME, 5).level, 5);
   });
 });
 
-describe(`Game timer`, () => {
-  it(`should return 'callback' after timeout if not stopped`, ()=> {
-    const clock = useFakeTimers();
-    let testResult = ``;
-    const cb = () => {
-      testResult = `callback`;
-    };
-    game.timer.start(game.INITIAL_GAME, cb);
-    clock.tick(30000);
-    assert.equal(testResult, `callback`);
+describe(`Game calculate time`, () => {
+  it(`should return 0 if no time left`, () => {
+    assert.equal(game.calculateTimeLeft(game.INITIAL_GAME, 40).timer, 0);
   });
-  it(`should return 30 if stopped immediately`, ()=> {
-    const cb = () => {};
-    game.timer.start(game.INITIAL_GAME, cb);
-    assert.equal(game.timer.stop(), 30);
+  it(`should return 30 if time full`, () => {
+    assert.equal(game.calculateTimeLeft(game.INITIAL_GAME, 0).timer, 30);
   });
-  it(`should return 20 if stopped after 10 seconds`, ()=> {
-    const clock = useFakeTimers();
-    const cb = () => {};
-    game.timer.start(game.INITIAL_GAME, cb);
-    clock.tick(10000);
-    assert.equal(game.timer.stop(), 20);
-  });
-  it(`should return 0 if stopped after 30 seconds`, ()=> {
-    const clock = useFakeTimers();
-    const cb = () => {};
-    game.timer.start(game.INITIAL_GAME, cb);
-    clock.tick(30000);
-    assert.equal(game.timer.stop(), 0);
+  it(`should return 10 if 20 seconds passed`, () => {
+    assert.equal(game.calculateTimeLeft(game.INITIAL_GAME, 0).timer, 30);
   });
 });
