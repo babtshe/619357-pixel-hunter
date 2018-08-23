@@ -1,3 +1,4 @@
+import {useFakeTimers} from 'sinon';
 import {assert} from 'chai';
 import * as game from '../game';
 
@@ -62,5 +63,37 @@ describe(`Game change levels`, () => {
   });
   it(`should return 5 if value is 5`, ()=>{
     assert.equal(game.changeLevel(game.INITIAL_GAME, 5).level.current, 5);
+  });
+});
+
+describe(`Game timer`, () => {
+  it(`should return 'callback' after timeout if not stopped`, ()=> {
+    const clock = useFakeTimers();
+    let testResult = ``;
+    const cb = () => {
+      testResult = `callback`;
+    };
+    game.timer.start(game.INITIAL_GAME, cb);
+    clock.tick(30000);
+    assert.equal(testResult, `callback`);
+  });
+  it(`should return 30 if stopped immediately`, ()=> {
+    const cb = () => {};
+    game.timer.start(game.INITIAL_GAME, cb);
+    assert.equal(game.timer.stop(), 30);
+  });
+  it(`should return 20 if stopped after 10 seconds`, ()=> {
+    const clock = useFakeTimers();
+    const cb = () => {};
+    game.timer.start(game.INITIAL_GAME, cb);
+    clock.tick(10000);
+    assert.equal(game.timer.stop(), 20);
+  });
+  it(`should return 0 if stopped after 30 seconds`, ()=> {
+    const clock = useFakeTimers();
+    const cb = () => {};
+    game.timer.start(game.INITIAL_GAME, cb);
+    clock.tick(30000);
+    assert.equal(game.timer.stop(), 0);
   });
 });

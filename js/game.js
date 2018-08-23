@@ -36,12 +36,16 @@ export const calculateLives = (currentValue, answerType) => {
 // display - элемент в котором показываем обратный отсчёт,
 // callback - функция, которая отвечает за обработку ответа игрока.
 export const timer = {
-  start(display, callback, game) {
+  start(game, callback, display) {
     this._value = game.timer;
-    display.textContent = this._value;
+    if (display) {
+      display.textContent = this._value;
+    }
     this._id = setInterval(() => {
       this._value--;
-      display.textContent = this._value;
+      if (display) {
+        display.textContent = this._value;
+      }
       if (this._value === 0) {
         clearInterval(this._id);
         callback(this._value);
