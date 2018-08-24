@@ -17,6 +17,9 @@ export const INITIAL_GAME = {
   lives: 3,
   level: 0
 };
+const TICK_DURATION = 1;
+
+let currentGame = INITIAL_GAME;
 
 export const calculateScores = (answers, lives, game) => {
   if (lives < 0) {
@@ -58,4 +61,13 @@ export const changeLevel = (game, level) => {
   }
   const newGame = Object.assign({}, game, {level});
   return newGame;
+};
+
+const gameTick = (duration) => {
+  const newGame = calculateTimeLeft(currentGame, duration);
+  currentGame = newGame;
+};
+
+export const gameLoop = () => {
+  return setInterval(() => gameTick(TICK_DURATION, currentGame), TICK_DURATION * 1000);
 };

@@ -17,6 +17,9 @@ describe(`Scores count`, () => {
   it(`should return 850 if all types of answers are present`, () => {
     assert.equal(game.calculateScores([3, 2, 1, 0, 2, 3, 0, 1, 3, 1], 1, game.INITIAL_GAME), 850);
   });
+  it(`should return 1150 if all lives and normal speed`, () => {
+    assert.equal(game.calculateScores([2, 2, 2, 2, 2, 2, 2, 2, 2, 2], 3, game.INITIAL_GAME), 1150);
+  });
 });
 
 describe(`Lives count`, () => {
