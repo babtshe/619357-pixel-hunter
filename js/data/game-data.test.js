@@ -3,22 +3,28 @@ import * as game from '../game';
 
 describe(`Scores count`, () => {
   it(`should return 0 if less than 0 lives`, () => {
-    assert.equal(game.calculateScores([3, 3, 3, 0, 0, 2, 1, 0, 0, 2], -1, game.INITIAL_GAME), 0);
+    const currentGame = Object.assign({}, game.INITIAL_GAME, {answers: [3, 3, 3, 0, 0, 2, 1, 0, 0, 2]}, {lives: -1});
+    assert.equal(game.calculateScores(currentGame), 0);
   });
   it(`should return 1650 if maximum score`, () =>{
-    assert.equal(game.calculateScores([3, 3, 3, 3, 3, 3, 3, 3, 3, 3], 3, game.INITIAL_GAME), 1650);
+    const currentGame = Object.assign({}, game.INITIAL_GAME, {answers: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3]}, {lives: 3});
+    assert.equal(game.calculateScores(currentGame), 1650);
   });
   it(`should return 350 if minimum score`, () =>{
-    assert.equal(game.calculateScores([0, 0, 0, 1, 1, 1, 1, 1, 1, 1], 0, game.INITIAL_GAME), 350);
+    const currentGame = Object.assign({}, game.INITIAL_GAME, {answers: [0, 0, 0, 1, 1, 1, 1, 1, 1, 1]}, {lives: 0});
+    assert.equal(game.calculateScores(currentGame), 350);
   });
   it(`should return 0 if all answers are wrong`, () => {
-    assert.equal(game.calculateScores([0, 0, 0, 0], -1), 0, game.INITIAL_GAME);
+    const currentGame = Object.assign({}, game.INITIAL_GAME, {answers: [0, 0, 0, 0]}, {lives: 0});
+    assert.equal(game.calculateScores(currentGame), 0);
   });
   it(`should return 850 if all types of answers are present`, () => {
-    assert.equal(game.calculateScores([3, 2, 1, 0, 2, 3, 0, 1, 3, 1], 1, game.INITIAL_GAME), 850);
+    const currentGame = Object.assign({}, game.INITIAL_GAME, {answers: [3, 2, 1, 0, 2, 3, 0, 1, 3, 1]}, {lives: 1});
+    assert.equal(game.calculateScores(currentGame), 850);
   });
   it(`should return 1150 if all lives and normal speed`, () => {
-    assert.equal(game.calculateScores([2, 2, 2, 2, 2, 2, 2, 2, 2, 2], 3, game.INITIAL_GAME), 1150);
+    const currentGame = Object.assign({}, game.INITIAL_GAME, {answers: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2]}, {lives: 3});
+    assert.equal(game.calculateScores(currentGame), 1150);
   });
 });
 
@@ -73,5 +79,20 @@ describe(`Game calculate time`, () => {
   });
   it(`should return 10 if 20 seconds passed`, () => {
     assert.equal(game.calculateTimeLeft(game.INITIAL_GAME, 0).timer, 30);
+  });
+});
+
+describe(`Game add answer`, () => {
+  it(`answers array[2] should be 0 if wrong answer`, () => {
+    const currentGame = Object.assign({}, game.INITIAL_GAME, {answers: [3, 2]}, {lives: 3}, {timer: 20});
+    assert.equal(game.addAnswer(currentGame, 0).answers[2], 0);
+  });
+  it(`lifes should be 2 if wrong answer`, () => {
+    const currentGame = Object.assign({}, game.INITIAL_GAME, {answers: [3, 2]}, {lives: 3}, {timer: 20});
+    assert.equal(game.addAnswer(currentGame, 0).lives, 2);
+  });
+  it(`answers array[2] should be 3 if fast and right answer`, () => {
+    const currentGame = Object.assign({}, game.INITIAL_GAME, {answers: [3, 2]}, {lives: 3}, {timer: 25});
+    assert.equal(game.addAnswer(currentGame, 1).answers[2], 3);
   });
 });

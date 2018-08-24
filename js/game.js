@@ -1,3 +1,5 @@
+const POINT_COST = 50;
+// const TICK_DURATION = 1;
 const Answer = {
   Type: {
     WRONG: 0,
@@ -13,19 +15,18 @@ const Answer = {
 };
 export const INITIAL_GAME = {
   timer: 30,
-  pointCost: 50,
   lives: 3,
-  level: 0
+  level: 0,
+  answers: []
 };
-const TICK_DURATION = 1;
 
-let currentGame = INITIAL_GAME;
+// let currentGame = INITIAL_GAME;
 
-export const calculateScores = (answers, lives, game) => {
-  if (lives < 0) {
+export const calculateScores = (game) => {
+  if (game.lives < 0) {
     return 0;
   }
-  const result = (answers.reduce((accumulator, item) => accumulator + item) + lives) * game.pointCost;
+  const result = (game.answers.reduce((accumulator, item) => accumulator + item) + game.lives) * POINT_COST;
   return result;
 };
 
@@ -63,11 +64,20 @@ export const changeLevel = (game, level) => {
   return newGame;
 };
 
-const gameTick = (duration) => {
-  const newGame = calculateTimeLeft(currentGame, duration);
-  currentGame = newGame;
+export const addAnswer = (game, answer) => {
+  // функция проверки ответов подъедет попозже. Пока предположим что ответ приходит в виде:
+  // 0 - неправильный
+  // 1 -  правильный
+  const answerValue = answer * calculateAnswerType(game.timer);
+  const lives = calculateLives(game.lives, answerValue);
+  const answers = [...game.answers, answerValue];
+  const newGame = Object.assign({}, game, {lives}, {answers});
+  return newGame;
 };
 
-export const gameLoop = () => {
-  return setInterval(() => gameTick(TICK_DURATION, currentGame), TICK_DURATION * 1000);
-};
+// export const gameLoop = () => {
+//   return setInterval(() => {
+//     currentGame = calculateTimeLeft(currentGame, TICK_DURATION);
+//   },
+//   TICK_DURATION * 1000);
+// };
