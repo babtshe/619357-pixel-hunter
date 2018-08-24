@@ -1,5 +1,4 @@
 const POINT_COST = 50;
-// const TICK_DURATION = 1;
 const Answer = {
   Type: {
     WRONG: 0,
@@ -20,18 +19,16 @@ export const INITIAL_GAME = {
   answers: []
 };
 
-// let currentGame = INITIAL_GAME;
-
-export const calculateScores = (game) => {
-  if (game.lives < 0) {
+export const calculateScores = (answers, lives) => {
+  if (lives < 0) {
     return 0;
   }
-  const result = (game.answers.reduce((accumulator, item) => accumulator + item) + game.lives) * POINT_COST;
-  return result;
+  return (answers.reduce((accumulator, item) => accumulator + item) + lives) * POINT_COST;
 };
 
-export const calculateLives = (currentValue, answerType) => {
-  return currentValue - !answerType;
+export const calculateLives = (game, answerType) => {
+  const lives = game.lives - !answerType;
+  return Object.assign({}, game, {lives});
 };
 
 export const calculateTimeLeft = (game, time) => {
@@ -39,8 +36,7 @@ export const calculateTimeLeft = (game, time) => {
     return game;
   }
   const timeLeft = Math.max(0, game.timer - time);
-  const newGame = Object.assign({}, game, {timer: timeLeft});
-  return newGame;
+  return Object.assign({}, game, {timer: timeLeft});
 };
 
 export const calculateAnswerType = (timeLeft) => {
@@ -57,27 +53,11 @@ export const calculateAnswerType = (timeLeft) => {
 };
 
 export const changeLevel = (game, level) => {
-  if (level <= game.level) {
-    return game;
-  }
-  const newGame = Object.assign({}, game, {level});
-  return newGame;
+  return Object.assign({}, game, {level});
 };
 
 export const addAnswer = (game, answer) => {
-  // функция проверки ответов подъедет попозже. Пока предположим что ответ приходит в виде:
-  // 0 - неправильный
-  // 1 -  правильный
   const answerValue = answer * calculateAnswerType(game.timer);
-  const lives = calculateLives(game.lives, answerValue);
   const answers = [...game.answers, answerValue];
-  const newGame = Object.assign({}, game, {lives}, {answers});
-  return newGame;
+  return Object.assign({}, game, {answers});
 };
-
-// export const gameLoop = () => {
-//   return setInterval(() => {
-//     currentGame = calculateTimeLeft(currentGame, TICK_DURATION);
-//   },
-//   TICK_DURATION * 1000);
-// };
