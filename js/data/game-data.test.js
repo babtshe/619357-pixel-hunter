@@ -85,15 +85,15 @@ describe(`Scores count`, () => {
 describe(`Lives count`, () => {
   it(`should return 0 if right answer and no lifes left`, () => {
     const currentGame = Object.assign({}, game.INITIAL_GAME, {lives: 0});
-    assert.equal(game.calculateLives(currentGame, 3).lives, 0);
+    assert.equal(game.calculateLives(currentGame, game.Answer.Type.FAST).lives, 0);
   });
   it(`should return -1 if wrong answer and no lives left`, () => {
     const currentGame = Object.assign({}, game.INITIAL_GAME, {lives: 0});
-    assert.equal(game.calculateLives(currentGame, 0).lives, -1);
+    assert.equal(game.calculateLives(currentGame, game.Answer.Type.WRONG).lives, -1);
   });
   it(`should return 3 if right answer and max lives left`, () => {
     const currentGame = Object.assign({}, game.INITIAL_GAME, {lives: 3});
-    assert.equal(game.calculateLives(currentGame, 1).lives, 3);
+    assert.equal(game.calculateLives(currentGame, game.Answer.Type.SLOW).lives, 3);
   });
 });
 
