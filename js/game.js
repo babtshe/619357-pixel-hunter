@@ -1,5 +1,5 @@
 const POINT_COST = 50;
-const Answer = {
+export const Answer = {
   Type: {
     WRONG: 0,
     SLOW: 1,

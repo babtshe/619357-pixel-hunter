@@ -3,22 +3,82 @@ import * as game from '../game';
 
 describe(`Scores count`, () => {
   it(`should return 0 if less than 0 lives`, () => {
-    assert.equal(game.calculateScores([3, 3, 3, 0, 0, 2, 1, 0, 0, 2], -1), 0);
+    assert.equal(game.calculateScores([
+      game.Answer.Type.FAST,
+      game.Answer.Type.FAST,
+      game.Answer.Type.FAST,
+      game.Answer.Type.WRONG,
+      game.Answer.Type.WRONG,
+      game.Answer.Type.NORMAL,
+      game.Answer.Type.SLOW,
+      game.Answer.Type.WRONG,
+      game.Answer.Type.WRONG,
+      game.Answer.Type.NORMAL
+    ], -1), 0);
   });
   it(`should return 1650 if maximum score`, () =>{
-    assert.equal(game.calculateScores([3, 3, 3, 3, 3, 3, 3, 3, 3, 3], 3), 1650);
+    assert.equal(game.calculateScores([
+      game.Answer.Type.FAST,
+      game.Answer.Type.FAST,
+      game.Answer.Type.FAST,
+      game.Answer.Type.FAST,
+      game.Answer.Type.FAST,
+      game.Answer.Type.FAST,
+      game.Answer.Type.FAST,
+      game.Answer.Type.FAST,
+      game.Answer.Type.FAST,
+      game.Answer.Type.FAST
+    ], 3), 1650);
   });
   it(`should return 350 if minimum score`, () =>{
-    assert.equal(game.calculateScores([0, 0, 0, 1, 1, 1, 1, 1, 1, 1], 0), 350);
+    assert.equal(game.calculateScores([
+      game.Answer.Type.WRONG,
+      game.Answer.Type.WRONG,
+      game.Answer.Type.WRONG,
+      game.Answer.Type.SLOW,
+      game.Answer.Type.SLOW,
+      game.Answer.Type.SLOW,
+      game.Answer.Type.SLOW,
+      game.Answer.Type.SLOW,
+      game.Answer.Type.SLOW,
+      game.Answer.Type.SLOW
+    ], 0), 350);
   });
   it(`should return 0 if all answers are wrong`, () => {
-    assert.equal(game.calculateScores([0, 0, 0, 0], 0), 0);
+    assert.equal(game.calculateScores([
+      game.Answer.Type.WRONG,
+      game.Answer.Type.WRONG,
+      game.Answer.Type.WRONG,
+      game.Answer.Type.WRONG
+    ], 0), 0);
   });
   it(`should return 850 if all types of answers are present`, () => {
-    assert.equal(game.calculateScores([3, 2, 1, 0, 2, 3, 0, 1, 3, 1], 1), 850);
+    assert.equal(game.calculateScores([
+      game.Answer.Type.FAST,
+      game.Answer.Type.NORMAL,
+      game.Answer.Type.SLOW,
+      game.Answer.Type.WRONG,
+      game.Answer.Type.NORMAL,
+      game.Answer.Type.FAST,
+      game.Answer.Type.WRONG,
+      game.Answer.Type.SLOW,
+      game.Answer.Type.FAST,
+      game.Answer.Type.SLOW
+    ], 1), 850);
   });
   it(`should return 1150 if all lives and normal speed`, () => {
-    assert.equal(game.calculateScores([2, 2, 2, 2, 2, 2, 2, 2, 2, 2], 3), 1150);
+    assert.equal(game.calculateScores([
+      game.Answer.Type.NORMAL,
+      game.Answer.Type.NORMAL,
+      game.Answer.Type.NORMAL,
+      game.Answer.Type.NORMAL,
+      game.Answer.Type.NORMAL,
+      game.Answer.Type.NORMAL,
+      game.Answer.Type.NORMAL,
+      game.Answer.Type.NORMAL,
+      game.Answer.Type.NORMAL,
+      game.Answer.Type.NORMAL
+    ], 3), 1150);
   });
 });
 
@@ -80,11 +140,19 @@ describe(`Game calculate time`, () => {
 
 describe(`Game add answer`, () => {
   it(`answers array[2] should be 0 if wrong answer`, () => {
-    const currentGame = Object.assign({}, game.INITIAL_GAME, {answers: [3, 2]}, {lives: 3}, {timer: 20});
+    const currentGame = Object.assign({}, game.INITIAL_GAME, {answers: [
+      game.Answer.Type.FAST,
+      game.Answer.Type.NORMAL
+    ]}, {lives: 3}, {timer: 20});
     assert.equal(game.addAnswer(currentGame, 0).answers[2], 0);
   });
   it(`answers array[4] should be 3 if fast and right answer`, () => {
-    const currentGame = Object.assign({}, game.INITIAL_GAME, {answers: [3, 2, 1, 2]}, {lives: 3}, {timer: 25});
+    const currentGame = Object.assign({}, game.INITIAL_GAME, {answers: [
+      game.Answer.Type.FAST,
+      game.Answer.Type.NORMAL,
+      game.Answer.Type.SLOW,
+      game.Answer.Type.NORMAL
+    ]}, {lives: 3}, {timer: 25});
     assert.equal(game.addAnswer(currentGame, 1).answers[4], 3);
   });
 });
