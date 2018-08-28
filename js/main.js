@@ -2,18 +2,16 @@ import util from './util';
 import intro from './intro';
 import greeting from './greeting';
 import rules from './rules';
-import gameDouble from './game-double';
-import gameSingle from './game-single';
-import gameTriple from './game-triple';
+import game from './game/game-template';
 import stats from './stats';
 
 const RESTART_SCREEN = 1;
 const gameField = document.querySelector(`#main`);
-const screens = [intro, greeting, rules, gameDouble, gameSingle, gameTriple, stats];
+const screens = [intro, greeting, rules, game, stats];
 
 let currentScreen = 0;
 const showScreen = (next = false) => {
-  util.clearElement(gameField);
+  util.clearElement(gameField); // TODO: clear all except header
   if (!next) {
     currentScreen = RESTART_SCREEN;
   }

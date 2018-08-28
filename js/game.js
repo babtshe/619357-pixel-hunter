@@ -1,4 +1,5 @@
-const POINT_COST = 50;
+export const MAX_LIVES = 3;
+export const POINT_COST = 50;
 export const Answer = {
   Type: {
     WRONG: 0,
