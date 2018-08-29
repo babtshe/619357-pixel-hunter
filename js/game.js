@@ -19,12 +19,6 @@ export const Answer = {
     NORMAL: 20
   }
 };
-export const GameType = {
-  SINGLE: 1,
-  DOUBLE: 2,
-  TRIPLE_PAINT: 3,
-  TRIPLE_PHOTO: 4
-};
 export const ImageType = {
   PHOTO: `photo`,
   PAINTING: `paint`

@@ -1,35 +1,23 @@
 const LEVEL_COUNT = 10;
 
 const testData = [
-  {
-    type: 1,
-    images: [
-      [`https://k42.kn3.net/CF42609C8.jpg`, `paint`]
-    ]
-  },
-  {
-    type: 2,
-    images: [
-      [`https://k42.kn3.net/CF42609C8.jpg`, `paint`],
-      [`https://i.imgur.com/DiHM5Zb.jpg`, `photo`]
-    ]
-  },
-  {
-    type: 3,
-    images: [
-      [`https://k42.kn3.net/CF42609C8.jpg`, `paint`],
-      [`https://i.imgur.com/DiHM5Zb.jpg`, `photo`],
-      [`https://k42.kn3.net/D2F0370D6.jpg`, `paint`]
-    ]
-  },
-  {
-    type: 4,
-    images: [
-      [`https://k42.kn3.net/CF42609C8.jpg`, `paint`],
-      [`https://i.imgur.com/DiHM5Zb.jpg`, `photo`],
-      [`https://k32.kn3.net/5C7060EC5.jpg`, `paint`]
-    ]
-  }
+  [
+    [`https://k42.kn3.net/CF42609C8.jpg`, `paint`, 600, 831] // разрешения картинок тут указанны временно, в дальнейшем будут вычисляться.
+  ],
+  [
+    [`https://k42.kn3.net/CF42609C8.jpg`, `paint`, 600, 831],
+    [`https://i.imgur.com/DiHM5Zb.jpg`, `photo`, 687, 1013]
+  ],
+  [
+    [`https://k42.kn3.net/CF42609C8.jpg`, `paint`, 600, 831],
+    [`https://i.imgur.com/DiHM5Zb.jpg`, `photo`, 687, 1013],
+    [`https://k42.kn3.net/D2F0370D6.jpg`, `paint`, 468, 354]
+  ],
+  [
+    [`https://k42.kn3.net/CF42609C8.jpg`, `paint`, 600, 831],
+    [`https://i.imgur.com/DiHM5Zb.jpg`, `photo`, 687, 1013],
+    [`http://i.imgur.com/1KegWPz.jpg`, `photo`, 1062, 708]
+  ]
 ];
 
 const generateTestLevels = (count, data) => {
@@ -38,10 +26,25 @@ const generateTestLevels = (count, data) => {
     if (j === data.length) {
       j = 0;
     }
-    result.push(Object.assign({}, data[j]));
+    result.push(data[j]);
     j++;
   }
   return result;
 };
 
-export const levelData = generateTestLevels(LEVEL_COUNT, testData);
+const generateImageObjects = (data) => {
+  const result = [];
+  for (const level of data) {
+    result.push(level.map((item) => {
+      return {
+        src: item[0],
+        type: item[1],
+        width: item[2],
+        height: item[3]
+      };
+    }));
+  }
+  return result;
+};
+
+export const levels = generateImageObjects(generateTestLevels(LEVEL_COUNT, testData));

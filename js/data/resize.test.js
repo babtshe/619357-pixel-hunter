@@ -1,9 +1,9 @@
 import assert from 'assert';
-import util from '../util';
+import {resize} from './resize';
 
 const createTestForFrame = (frame) => {
   const assertRatio = (given, expected) => {
-    const actual = util.resize(frame, given);
+    const actual = resize(frame, given);
     assert.deepEqual(actual, expected);
   };
 

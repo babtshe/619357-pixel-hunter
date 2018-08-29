@@ -1,6 +1,6 @@
-import util from './util';
-import {generateHeaderTemplate} from './header';
-import {getResults, getStatClassByAnswerType} from './game/game-template';
+import {gameFieldElement, getElementFromString, clearElement} from './util';
+import {renderHeader} from './header';
+import {generateAnswersListTemplate} from './game/answer-row';
 import {calculateScores, POINT_COST, Answer} from './game';
 const LAST_GAME = 0;
 const Titles = {
@@ -8,7 +8,7 @@ const Titles = {
   LOSE: `Поражение!`
 };
 let scoresStorage = [];
-const template = (stateList) => {
+const generateTemplate = (stateList) => {
   const gameScores = [];
   stateList.forEach((state, index) => {
     gameScores.push(`<table class="result__table">
@@ -58,26 +58,12 @@ const template = (stateList) => {
   </section>`;
 };
 
-const generateStatsList = (answers, levelCount) => {
-  let statsItems = [];
-  for (const item of answers) {
-    statsItems.push(`<li class="stats__result ${getStatClassByAnswerType(item)}"></li>`);
-  }
-  statsItems.push(...new Array(levelCount - answers.length)
-  .fill(`<li class="stats__result ${getStatClassByAnswerType()}"></li>`));
-  return `
-  <ul class="stats">
-   ${statsItems.join(``)}
-  </ul>`;
-};
-
-const calculateStatistics = (answers, lives, levelCount) => {
+const calculateStatistics = (answers, lives) => {
   const scores = calculateScores(answers, lives);
   return Object.assign({},
       {
         title: scores ? Titles.WIN : Titles.LOSE,
-        levelCount,
-        answerList: generateStatsList(answers, 10),
+        answerList: generateAnswersListTemplate(answers),
         score: {
           normal: {
             count: answers.reduce((total, item) => total + (item !== Answer.Type.WRONG), 0),
@@ -104,21 +90,9 @@ const calculateStatistics = (answers, lives, levelCount) => {
       });
 };
 
-const render = (stateList) => {
-  const resultElement = document.querySelector(`.result`);
-  const statsElement = util.getElementFromString(template(stateList));
-  resultElement.parentNode.replaceChild(statsElement, resultElement);
+export const renderStats = (answers, lives) => {
+  scoresStorage.unshift(calculateStatistics(answers, lives));
+  clearElement(gameFieldElement);
+  renderHeader();
+  gameFieldElement.appendChild(getElementFromString(generateTemplate(scoresStorage)));
 };
-
-const statsInit = (cb) => {
-  util.initRestart(cb); // TODO: move to header
-  scoresStorage.unshift(calculateStatistics(...getResults()));
-  render(scoresStorage);
-};
-
-const result = {
-  element: util.getElementFromString(`${generateHeaderTemplate()}<section class="result"></section>`),
-  init: (cbNextScreen)=> statsInit(cbNextScreen)
-};
-
-export default result;
