@@ -58,7 +58,7 @@ const generateGameContent = (state) => {
 };
 
 const checkAnswerTriple = (answer, type, levelImages) => {
-  let result = 0;
+  let result = Answer.Type.WRONG;
   if (type === GameType.TRIPLE_PAINT) {
     result = levelImages.some((item) => item[0] === answer && item[1] === ImageType.PAINTING);
   }
@@ -134,6 +134,19 @@ const addListeners = (type) => {
   }
 };
 
+const updateHeader = (game) => {
+  const gameHeader = document.querySelector(`.header`);
+  const updatedHeader = util.getElementFromString(generateHeaderTemplate(game)).cloneNode(true);
+  gameHeader.parentNode.replaceChild(updatedHeader, gameHeader);
+  util.initRestart(screensCallback);
+};
+
+const updateGameContent = (levelData) => {
+  const gameContent = document.querySelector(`.game__content`);
+  const newLevel = util.getElementFromString(generateGameContent(levelData)).cloneNode(true);
+  gameContent.parentNode.replaceChild(newLevel, gameContent);
+};
+
 const renderGameLevel = (level) => {
   const levelData = levels[level];
   if (!levelData || currentGame.lives < 0) {
@@ -141,13 +154,8 @@ const renderGameLevel = (level) => {
     return;
   }
   currentGame = changeLevel(currentGame, level);
-  const gameHeader = document.querySelector(`.header`);
-  const updatedHeader = util.getElementFromString(generateHeaderTemplate(currentGame)).cloneNode(true);
-  gameHeader.parentNode.replaceChild(updatedHeader, gameHeader);
-  util.initRestart(screensCallback);
-  const gameContent = document.querySelector(`.game__content`);
-  const newLevel = util.getElementFromString(generateGameContent(levelData)).cloneNode(true);
-  gameContent.parentNode.replaceChild(newLevel, gameContent);
+  updateHeader(currentGame);
+  updateGameContent(levelData);
   updateTask(levelData.task);
   addListeners(levelData.type);
 };
