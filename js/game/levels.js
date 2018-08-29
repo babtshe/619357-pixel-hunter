@@ -1,8 +1,9 @@
 import {levelData} from '../data/level-data';
+import {GameType} from '../game';
 
-const gameTypes = [
+const gameSettingsByType = [
   {
-    type: `single`,
+    type: GameType.SINGLE,
     task: `Угадай, фото или рисунок?`,
     formClass: `game__content--wide`,
     optionsCount: 1,
@@ -11,7 +12,7 @@ const gameTypes = [
     height: 455
   },
   {
-    type: `double`,
+    type: GameType.DOUBLE,
     task: `Угадайте для каждого изображения фото или рисунок?`,
     formClass: ``,
     optionsCount: 2,
@@ -20,7 +21,7 @@ const gameTypes = [
     height: 458
   },
   {
-    type: `triple-paint`,
+    type: GameType.TRIPLE_PAINT,
     task: `Найдите рисунок среди изображений`,
     formClass: `game__content--triple`,
     optionsCount: 3,
@@ -29,7 +30,7 @@ const gameTypes = [
     height: 455
   },
   {
-    type: `triple-photo`,
+    type: GameType.TRIPLE_PHOTO,
     task: `Найдите фотографию среди изображений`,
     formClass: `game__content--triple`,
     optionsCount: 3,
@@ -47,4 +48,4 @@ const generateLevels = (data, types) => {
   return result;
 };
 
-export const levels = generateLevels(levelData, gameTypes);
+export const levels = generateLevels(levelData, gameSettingsByType);

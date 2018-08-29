@@ -1,8 +1,7 @@
 import util from '../util';
 import {generateHeaderTemplate} from '../header';
-import {Answer, INITIAL_GAME, changeLevel, addAnswer, calculateLives} from '../game';
+import {Answer, INITIAL_GAME, changeLevel, addAnswer, calculateLives, GameType, ImageType} from '../game';
 import {levels} from './levels';
-
 
 let currentGame = INITIAL_GAME;
 let gameTaskElement = ``;
@@ -60,11 +59,11 @@ const generateGameContent = (state) => {
 
 const checkAnswerTriple = (answer, type, levelImages) => {
   let result = 0;
-  if (type === `triple-paint`) {
-    result = levelImages.some((item) => item[0] === answer && item[1] === `paint`);
+  if (type === GameType.TRIPLE_PAINT) {
+    result = levelImages.some((item) => item[0] === answer && item[1] === ImageType.PAINTING);
   }
-  if (type === `triple-photo`) {
-    result = levelImages.some((item) => item[0] === answer && item[1] === `photo`);
+  if (type === GameType.TRIPLE_PHOTO) {
+    result = levelImages.some((item) => item[0] === answer && item[1] === ImageType.PHOTO);
   }
   return result;
 };
@@ -79,16 +78,16 @@ const addListeners = (type) => {
   let gameOptions;
   let gameAnswers;
   switch (type) {
-    case `single`:
+    case GameType.SINGLE:
       gameAnswers = document.querySelectorAll(`.game__answer`);
       break;
-    case `double`:
+    case GameType.DOUBLE:
       gameAnswers = document.querySelectorAll(`.game__answer`);
       break;
-    case `triple-paint`:
+    case GameType.TRIPLE_PAINT:
       gameOptions = document.querySelectorAll(`.game__option`);
       break;
-    case `triple-photo`:
+    case GameType.TRIPLE_PHOTO:
       gameOptions = document.querySelectorAll(`.game__option`);
       break;
   }
@@ -109,10 +108,10 @@ const addListeners = (type) => {
       const answers = [];
       for (let item of questionsAnswered) {
         if (item.classList.contains(`game__answer--photo`)) {
-          answers.push(`photo`);
+          answers.push(ImageType.PHOTO);
         }
         if (item.classList.contains(`game__answer--paint`)) {
-          answers.push(`paint`);
+          answers.push(ImageType.PAINTING);
         }
       }
       const answer = checkAnswer(answers, levels[currentGame.level].images);

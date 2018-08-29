@@ -117,7 +117,7 @@ const statsInit = (cb) => {
 };
 
 const result = {
-  element: util.getElementFromString(`${generateHeaderTemplate()}<section class="result"></section>`), // util.getElementFromString(template([calculateStatistics([1], 3, 2)])),
+  element: util.getElementFromString(`${generateHeaderTemplate()}<section class="result"></section>`),
   init: (cbNextScreen)=> statsInit(cbNextScreen)
 };
 

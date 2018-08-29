@@ -1,5 +1,11 @@
 export const MAX_LIVES = 3;
 export const POINT_COST = 50;
+export const INITIAL_GAME = {
+  timer: 30,
+  lives: 3,
+  level: 0,
+  answers: []
+};
 export const Answer = {
   Type: {
     WRONG: 0,
@@ -13,11 +19,15 @@ export const Answer = {
     NORMAL: 20
   }
 };
-export const INITIAL_GAME = {
-  timer: 30,
-  lives: 3,
-  level: 0,
-  answers: []
+export const GameType = {
+  SINGLE: 1,
+  DOUBLE: 2,
+  TRIPLE_PAINT: 3,
+  TRIPLE_PHOTO: 4
+};
+export const ImageType = {
+  PHOTO: `photo`,
+  PAINTING: `paint`
 };
 
 export const calculateScores = (answers, lives) => {
