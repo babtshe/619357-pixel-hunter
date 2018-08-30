@@ -27,17 +27,22 @@ const generateHeaderTemplate = (time, lives) => {
   </header>`;
 };
 
-const addListener = () => {
+const addListener = (noModal) => {
   const onRestartElementClick = () => {
-    renderModalConfirm(renderGreeting);
+    if (noModal) {
+      renderGreeting();
+    } else {
+      renderModalConfirm(renderGreeting);
+    }
+
   };
   const restartElement = document.querySelector(`button.back`);
   restartElement.addEventListener(`click`, onRestartElementClick);
 };
 
-export const renderHeader = (time, lives) => {
+export const renderHeader = (time, lives, noModal) => {
   const template = getElementFromString(generateHeaderTemplate(time, lives));
   gameFieldElement.appendChild(template);
-  addListener();
+  addListener(noModal);
 };
 

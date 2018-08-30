@@ -93,6 +93,6 @@ const calculateStatistics = (answers, lives) => {
 export const renderStats = (answers, lives) => {
   scoresStorage.unshift(calculateStatistics(answers, lives));
   clearElement(gameFieldElement);
-  renderHeader();
+  renderHeader(undefined, undefined, true);
   gameFieldElement.appendChild(getElementFromString(generateTemplate(scoresStorage)));
 };

@@ -1,7 +1,7 @@
 import {gameFieldElement, getElementFromString} from '../util';
 import {resize} from '../data/resize';
 import {generateAnswersListTemplate} from '../game/answer-row';
-import {ImageType} from '../game';
+import {ImageType, DEBUG_MODE} from '../game';
 import {onAnswer} from './game-screen';
 
 const frame = {
@@ -14,7 +14,7 @@ const generateTemplate = (container, image, answers) => {
   <section class="game">
     <p class="game__task">Угадай, фото или рисунок?</p>
     <form class="game__content  game__content--wide">
-      <div class="game__option">
+      <div class="game__option${DEBUG_MODE ? ` game__option--${image.type}` : ``}">
         <img src="${image.src}" alt="Option 1" width="${resize(container, image).width}" height="${resize(container, image).height}">
         <label class="game__answer  game__answer--photo">
           <input class="visually-hidden" name="question1" type="radio" value="photo">

@@ -1,7 +1,7 @@
 import {gameFieldElement, getElementFromString} from '../util';
 import {resize} from '../data/resize';
 import {generateAnswersListTemplate} from '../game/answer-row';
-import {ImageType} from '../game';
+import {ImageType, DEBUG_MODE} from '../game';
 import {onAnswer} from './game-screen';
 
 const frame = {
@@ -26,7 +26,7 @@ const generateTemplate = (container, images, answers) => {
     <form class="game__content  game__content--triple">
   ${images.map((item, index) => {
     return `
-      <div class="game__option">
+      <div class="game__option${DEBUG_MODE ? ` game__option--${item.type}` : ``}">
         <img src="${item.src}" alt="Option ${index + 1}" width="${resize(container, item).width}" height="${resize(container, item).height}">
       </div>`;
   }).join(``)}
