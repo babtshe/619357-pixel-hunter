@@ -1,6 +1,7 @@
 import {MAX_LIVES} from './game';
 import {getElementFromString, gameFieldElement} from './util';
 import {renderGreeting} from './greeting';
+import {renderModalConfirm} from './modal-confirm';
 
 const generateHeaderTemplate = (time, lives) => {
   return `<header class="header">
@@ -28,8 +29,7 @@ const generateHeaderTemplate = (time, lives) => {
 
 const addListener = () => {
   const onRestartElementClick = () => {
-    restartElement.removeEventListener(`click`, onRestartElementClick);
-    renderGreeting();
+    renderModalConfirm(renderGreeting);
   };
   const restartElement = document.querySelector(`button.back`);
   restartElement.addEventListener(`click`, onRestartElementClick);
