@@ -1,4 +1,3 @@
-export const DEBUG_MODE = true;
 export const MAX_LIVES = 3;
 export const POINT_COST = 50;
 export const INITIAL_GAME = {

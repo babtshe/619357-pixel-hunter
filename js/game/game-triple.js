@@ -1,8 +1,10 @@
 import {gameFieldElement, getElementFromString} from '../util';
 import {resize} from '../data/resize';
 import {generateAnswersListTemplate} from '../game/answer-row';
-import {ImageType, DEBUG_MODE} from '../game';
+import {ImageType} from '../game';
 import {onAnswer} from './game-screen';
+
+const debugMode = (window.location.hash === `#debug`);
 
 const frame = {
   width: 304,
@@ -26,7 +28,7 @@ const generateTemplate = (container, images, answers) => {
     <form class="game__content  game__content--triple">
   ${images.map((item, index) => {
     return `
-      <div class="game__option${DEBUG_MODE ? ` game__option--${item.type}` : ``}">
+      <div class="game__option">
         <img src="${item.src}" alt="Option ${index + 1}" width="${resize(container, item).width}" height="${resize(container, item).height}">
       </div>`;
   }).join(``)}
@@ -35,29 +37,27 @@ const generateTemplate = (container, images, answers) => {
   </section>`;
 };
 
-const checkAnswer = (answerImageSrc, images) => {
-  let result = false;
-  if (findSinglePictureType(images) === ImageType.PAINTING) {
-    result = images.some((item) => item.src === answerImageSrc && item.type === ImageType.PAINTING);
-  }
-  if (findSinglePictureType(images) === ImageType.PHOTO) {
-    result = images.some((item) => item.src === answerImageSrc && item.type === ImageType.PHOTO);
-  }
-  return result;
-};
-
 const initialize = (images) => {
   const gameOptions = document.querySelectorAll(`.game__option`);
 
-  const onGameOptionClick = (evt) => {
-    const optionSrc = evt.target.src ? evt.target.src : evt.target.firstElementChild.src;
-    const answer = checkAnswer(optionSrc, images);
-    onAnswer(answer);
+  const onRightAnswerClick = () => {
+    onAnswer(true);
   };
 
-  for (let item of gameOptions) {
-    item.addEventListener(`click`, onGameOptionClick, false);
-  }
+  const onWrongAnswerClick = () => {
+    onAnswer(false);
+  };
+
+  gameOptions.forEach((item, index) => {
+    if (images[index].type === findSinglePictureType(images)) {
+      item.addEventListener(`click`, onRightAnswerClick);
+      if (debugMode) {
+        item.style.outline = `solid 5px green`;
+      }
+    } else {
+      item.addEventListener(`click`, onWrongAnswerClick);
+    }
+  });
 };
 
 export const renderGameTriple = (images, answers) => {

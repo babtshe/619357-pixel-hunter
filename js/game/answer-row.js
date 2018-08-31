@@ -16,13 +16,17 @@ const getStatClassByAnswerType = (answerType) => {
   }
 };
 
+const fillUndefinedAnswers = (answers) => {
+  return new Array(levels.length - answers.length)
+    .fill(`<li class="stats__result ${getStatClassByAnswerType()}"></li>`);
+};
+
 export const generateAnswersListTemplate = (answers) => {
   let statsItems = [];
   for (const item of answers) {
     statsItems.push(`<li class="stats__result ${getStatClassByAnswerType(item)}"></li>`);
   }
-  statsItems.push(...new Array(levels.length - answers.length)
-  .fill(`<li class="stats__result ${getStatClassByAnswerType()}"></li>`));
+  statsItems = statsItems.concat(fillUndefinedAnswers(answers));
   return `
   <ul class="stats">
    ${statsItems.join(``)}

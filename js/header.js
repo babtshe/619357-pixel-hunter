@@ -3,6 +3,18 @@ import {getElementFromString, gameFieldElement} from './util';
 import {renderGreeting} from './greeting';
 import {renderModalConfirm} from './modal-confirm';
 
+const generateLivesTemplate = (lives, maxLives) => {
+  const emptyLives = new Array(maxLives - Math.max(0, lives))
+    .fill(`<img src="img/heart__empty.svg" class="game__heart" alt=" Missed Life" width="31" height="27">`);
+  const fullLives = new Array(Math.max(0, lives))
+    .fill(`<img src="img/heart__full.svg" class="game__heart" alt="Life" width="31" height="27">`);
+
+  return `
+  <div class="game__lives">
+  ${emptyLives.concat(fullLives).join(``)}
+  </div>`;
+};
+
 const generateHeaderTemplate = (time, lives) => {
   return `<header class="header">
     <button class="back">
@@ -16,14 +28,8 @@ const generateHeaderTemplate = (time, lives) => {
     </button>
   ${time !== undefined && lives !== undefined ?
     `<div class="game__timer">${time}</div>
-    <div class="game__lives">
-    ${new Array(MAX_LIVES - Math.max(0, lives))
-      .fill(`<img src="img/heart__empty.svg" class="game__heart" alt=" Missed Life" width="31" height="27">`)
-      .join(``)}
-    ${new Array(Math.max(0, lives))
-      .fill(`<img src="img/heart__full.svg" class="game__heart" alt="Life" width="31" height="27">`)
-      .join(``)}
-    </div>` : ``}
+    ${generateLivesTemplate(lives, MAX_LIVES)}`
+    : ``}
   </header>`;
 };
 
@@ -34,7 +40,6 @@ const addListener = (noModal) => {
     } else {
       renderModalConfirm(renderGreeting);
     }
-
   };
   const restartElement = document.querySelector(`button.back`);
   restartElement.addEventListener(`click`, onRestartElementClick);

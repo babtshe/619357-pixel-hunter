@@ -1,8 +1,9 @@
 import {gameFieldElement, getElementFromString} from '../util';
 import {resize} from '../data/resize';
 import {generateAnswersListTemplate} from '../game/answer-row';
-import {ImageType, DEBUG_MODE} from '../game';
 import {onAnswer} from './game-screen';
+
+const debugMode = (window.location.hash === `#debug`);
 
 const frame = {
   width: 468,
@@ -15,7 +16,7 @@ const generateTemplate = (container, images, answers) => {
     <form class="game__content">
   ${images.map((item, index) => {
     return `
-    <div class="game__option${DEBUG_MODE ? ` game__option--${item.type}` : ``}">
+    <div class="game__option">
     <img src="${item.src}" alt="Option ${index + 1}" width="${resize(container, item).width}" height="${resize(container, item).height}">
     <label class="game__answer  game__answer--photo">
       <input class="visually-hidden" name="question${index + 1}" type="radio" value="photo">
@@ -32,34 +33,30 @@ const generateTemplate = (container, images, answers) => {
   </section>`;
 };
 
-const checkAnswer = (answerList, levelImages) => {
-  return levelImages.reduce((accumulator, item, index) => {
-    return accumulator * (item.type === answerList[index]);
-  }, 1);
-};
-
 const initialize = (images) => {
   const gameOptions = document.querySelectorAll(`.game__answer`);
+  const answers = [];
 
-  const onAnswerRadioClick = () => {
-    const questionsAnswered = [...gameOptions].filter((item) => item.control.checked);
-    if (questionsAnswered.length === gameOptions.length / 2) {
-      const answers = [];
-      for (let item of questionsAnswered) {
-        if (item.classList.contains(`game__answer--photo`)) {
-          answers.push(ImageType.PHOTO);
-        }
-        if (item.classList.contains(`game__answer--paint`)) {
-          answers.push(ImageType.PAINTING);
-        }
-      }
-      onAnswer(checkAnswer(answers, images));
+  const onAnswerClick = () => {
+    const checkedAnswers = answers.filter((item) => item[0].checked);
+    if (checkedAnswers.length === images.length) {
+      const result = checkedAnswers.every((item) => item[1] === true);
+      onAnswer(result);
     }
   };
 
-  for (let item of gameOptions) {
-    item.addEventListener(`click`, onAnswerRadioClick);
-  }
+  gameOptions.forEach((item, index) => {
+    let imageIndex = Math.floor(index / (gameOptions.length / images.length));
+    if (item.classList.contains(`game__answer--${images[imageIndex].type}`)) {
+      answers.push([item.control, true]);
+      if (debugMode) {
+        item.style.outline = `solid 5px green`;
+      }
+    } else {
+      answers.push([item.control, false]);
+    }
+    item.control.addEventListener(`click`, onAnswerClick);
+  });
 };
 
 export const renderGameDouble = (images, answers) => {
