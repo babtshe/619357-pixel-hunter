@@ -1,5 +1,6 @@
-import util from './util';
-const TEMPLATE = `
+import {gameFieldElement, clearElement, getElementFromString} from './util';
+import {renderRules} from './rules';
+const template = `
   <section class="greeting central--blur">
     <img class="greeting__logo" src="img/logo_ph-big.svg" width="201" height="89" alt="Pixel Hunter">
     <div class="greeting__asterisk asterisk"><span class="visually-hidden">Я просто красивая звёздочка</span>*</div>
@@ -21,17 +22,16 @@ const TEMPLATE = `
     </button>
   </section>`;
 
-const greetingInit = (cb) => {
+const addListener = () => {
   const continueButton = document.querySelector(`.greeting__continue`);
   const onContinueButtonClick = () => {
-    cb(true);
+    renderRules();
   };
   continueButton.addEventListener(`click`, onContinueButtonClick);
 };
 
-const result = {
-  element: util.getElementFromString(TEMPLATE),
-  init: (cbNextScreen)=> greetingInit(cbNextScreen)
+export const renderGreeting = () => {
+  clearElement(gameFieldElement);
+  gameFieldElement.appendChild(getElementFromString(template));
+  addListener();
 };
-
-export default result;

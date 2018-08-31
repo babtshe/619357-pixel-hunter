@@ -1,21 +1,21 @@
-import util from './util';
-const TEMPLATE = `
+import {getElementFromString, clearElement, gameFieldElement} from './util';
+import {renderGreeting} from './greeting';
+const template = `
   <section class="intro">
     <button class="intro__asterisk asterisk" type="button"><span class="visually-hidden">Продолжить</span>*</button>
     <p class="intro__motto"><sup>*</sup> Это не фото. Это рисунок маслом нидерландского художника-фотореалиста Tjalf Sparnaay.</p>
   </section>`;
 
-const introInit = (cb) => {
+const addListener = () => {
   const introButton = document.querySelector(`.intro__asterisk`);
   const onIntroButtonClick = () => {
-    cb(true);
+    renderGreeting();
   };
   introButton.addEventListener(`click`, onIntroButtonClick);
 };
 
-const result = {
-  element: util.getElementFromString(TEMPLATE),
-  init: (cbNextScreen) => introInit(cbNextScreen)
+export const renderIntro = () => {
+  clearElement(gameFieldElement);
+  gameFieldElement.appendChild(getElementFromString(template));
+  addListener();
 };
-
-export default result;

@@ -1,122 +1,98 @@
-import util from './util';
-const TEMPLATE = `
-  <header class="header">
-    <button class="back">
-      <span class="visually-hidden">Вернуться к началу</span>
-      <svg class="icon" width="45" height="45" viewBox="0 0 45 45" fill="#000000">
-        <use xlink:href="img/sprite.svg#arrow-left"></use>
-      </svg>
-      <svg class="icon" width="101" height="44" viewBox="0 0 101 44" fill="#000000">
-        <use xlink:href="img/sprite.svg#logo-small"></use>
-      </svg>
-    </button>
-  </header>
+import {gameFieldElement, getElementFromString, clearElement} from './util';
+import {renderHeader} from './header';
+import {generateAnswersListTemplate} from './game/answer-row';
+import {calculateScores, POINT_COST, Answer} from './game';
+const LAST_GAME = 0;
+const Titles = {
+  WIN: `Победа!`,
+  LOSE: `Поражение!`
+};
+let scoresStorage = [];
+const generateTemplate = (stateList) => {
+  const gameScores = [];
+  stateList.forEach((state, index) => {
+    gameScores.push(`<table class="result__table">
+    <tr>
+      <td class="result__number">${index + 1}.</td>
+      <td colspan="2">
+      ${state.answerList}
+      </td>
+      ${state.score.total ? `<td class="result__points">× ${state.score.normal.price}` : `<td class="result__total">`}</td>
+      <td class="result__total ${state.score.total ? `">${state.score.normal.total}` : `result__total--final">FAIL`}</td>
+    </tr>
+  ${state.score.total ? `
+    ${state.score.fast.count ?
+    `<tr>
+      <td></td>
+      <td class="result__extra">Бонус за скорость:</td>
+      <td class="result__extra">${state.score.fast.count} <span class="stats__result stats__result--fast"></span></td>
+      <td class="result__points">× ${state.score.fast.price}</td>
+      <td class="result__total">${state.score.fast.total}</td>
+    </tr>` : ``}
+    ${state.score.lives.count ?
+    `<tr>
+      <td></td>
+      <td class="result__extra">Бонус за жизни:</td>
+      <td class="result__extra">${state.score.lives.count} <span class="stats__result stats__result--alive"></span></td>
+      <td class="result__points">× ${state.score.lives.price}</td>
+      <td class="result__total">${state.score.lives.total}</td>
+    </tr>` : ``}
+    ${state.score.slow.count ?
+    `<tr>
+      <td></td>
+      <td class="result__extra">Штраф за медлительность:</td>
+      <td class="result__extra">${state.score.slow.count} <span class="stats__result stats__result--slow"></span></td>
+      <td class="result__points">× ${state.score.slow.price}</td>
+      <td class="result__total">${state.score.slow.total}</td>
+    </tr>` : ``}
+    <tr>
+      <td colspan="5" class="result__total  result__total--final">${state.score.total}</td>
+    </tr>` : ``}
+  </table>`);
+  });
+
+  return `
   <section class="result">
-    <h2 class="result__title">Победа!</h2>
-    <table class="result__table">
-      <tr>
-        <td class="result__number">1.</td>
-        <td colspan="2">
-          <ul class="stats">
-            <li class="stats__result stats__result--wrong"></li>
-            <li class="stats__result stats__result--slow"></li>
-            <li class="stats__result stats__result--fast"></li>
-            <li class="stats__result stats__result--correct"></li>
-            <li class="stats__result stats__result--wrong"></li>
-            <li class="stats__result stats__result--unknown"></li>
-            <li class="stats__result stats__result--slow"></li>
-            <li class="stats__result stats__result--unknown"></li>
-            <li class="stats__result stats__result--fast"></li>
-            <li class="stats__result stats__result--unknown"></li>
-          </ul>
-        </td>
-        <td class="result__points">× 100</td>
-        <td class="result__total">900</td>
-      </tr>
-      <tr>
-        <td></td>
-        <td class="result__extra">Бонус за скорость:</td>
-        <td class="result__extra">1 <span class="stats__result stats__result--fast"></span></td>
-        <td class="result__points">× 50</td>
-        <td class="result__total">50</td>
-      </tr>
-      <tr>
-        <td></td>
-        <td class="result__extra">Бонус за жизни:</td>
-        <td class="result__extra">2 <span class="stats__result stats__result--alive"></span></td>
-        <td class="result__points">× 50</td>
-        <td class="result__total">100</td>
-      </tr>
-      <tr>
-        <td></td>
-        <td class="result__extra">Штраф за медлительность:</td>
-        <td class="result__extra">2 <span class="stats__result stats__result--slow"></span></td>
-        <td class="result__points">× 50</td>
-        <td class="result__total">-100</td>
-      </tr>
-      <tr>
-        <td colspan="5" class="result__total  result__total--final">950</td>
-      </tr>
-    </table>
-    <table class="result__table">
-      <tr>
-        <td class="result__number">2.</td>
-        <td>
-          <ul class="stats">
-            <li class="stats__result stats__result--wrong"></li>
-            <li class="stats__result stats__result--slow"></li>
-            <li class="stats__result stats__result--fast"></li>
-            <li class="stats__result stats__result--correct"></li>
-            <li class="stats__result stats__result--wrong"></li>
-            <li class="stats__result stats__result--unknown"></li>
-            <li class="stats__result stats__result--slow"></li>
-            <li class="stats__result stats__result--wrong"></li>
-            <li class="stats__result stats__result--fast"></li>
-            <li class="stats__result stats__result--wrong"></li>
-          </ul>
-        </td>
-        <td class="result__total"></td>
-        <td class="result__total  result__total--final">fail</td>
-      </tr>
-    </table>
-    <table class="result__table">
-      <tr>
-        <td class="result__number">3.</td>
-        <td colspan="2">
-          <ul class="stats">
-            <li class="stats__result stats__result--wrong"></li>
-            <li class="stats__result stats__result--slow"></li>
-            <li class="stats__result stats__result--fast"></li>
-            <li class="stats__result stats__result--correct"></li>
-            <li class="stats__result stats__result--wrong"></li>
-            <li class="stats__result stats__result--unknown"></li>
-            <li class="stats__result stats__result--slow"></li>
-            <li class="stats__result stats__result--unknown"></li>
-            <li class="stats__result stats__result--fast"></li>
-            <li class="stats__result stats__result--unknown"></li>
-          </ul>
-        </td>
-        <td class="result__points">× 100</td>
-        <td class="result__total">900</td>
-      </tr>
-      <tr>
-        <td></td>
-        <td class="result__extra">Бонус за жизни:</td>
-        <td class="result__extra">2 <span class="stats__result stats__result--alive"></span></td>
-        <td class="result__points">× 50</td>
-        <td class="result__total">100</td>
-      </tr>
-      <tr>
-        <td colspan="5" class="result__total  result__total--final">950</td>
-      </tr>
-    </table>
+    <h2 class="result__title">${stateList.length ? stateList[LAST_GAME].title : ``}</h2>
+    ${gameScores.join(``)}
   </section>`;
-
-const statsInit = (cb) => util.initRestart(cb);
-
-const result = {
-  element: util.getElementFromString(TEMPLATE),
-  init: (cbNextScreen)=> statsInit(cbNextScreen)
 };
 
-export default result;
+const calculateStatistics = (answers, lives) => {
+  const scores = calculateScores(answers, lives);
+  return Object.assign({},
+      {
+        title: scores ? Titles.WIN : Titles.LOSE,
+        answerList: generateAnswersListTemplate(answers),
+        score: {
+          normal: {
+            count: answers.reduce((total, item) => total + (item !== Answer.Type.WRONG), 0),
+            price: Answer.Type.NORMAL * POINT_COST,
+            total: answers.reduce((total, item) => total + (item !== Answer.Type.WRONG), 0) * Answer.Type.NORMAL * POINT_COST
+          },
+          fast: {
+            count: answers.reduce((total, item) => total + (item === Answer.Type.FAST), 0),
+            price: POINT_COST,
+            total: answers.reduce((total, item) => total + (item === Answer.Type.FAST), 0) * POINT_COST
+          },
+          lives: {
+            count: lives,
+            price: POINT_COST,
+            total: lives * POINT_COST
+          },
+          slow: {
+            count: answers.reduce((total, item) => total + (item === Answer.Type.SLOW), 0),
+            price: POINT_COST,
+            total: answers.reduce((total, item) => total + (item === Answer.Type.SLOW), 0) * -POINT_COST
+          },
+          total: scores
+        }
+      });
+};
+
+export const renderStats = (answers, lives) => {
+  scoresStorage.unshift(calculateStatistics(answers, lives));
+  clearElement(gameFieldElement);
+  renderHeader(undefined, undefined, true);
+  gameFieldElement.appendChild(getElementFromString(generateTemplate(scoresStorage)));
+};

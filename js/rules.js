@@ -1,16 +1,7 @@
-import util from './util';
-const TEMPLATE = `
-  <header class="header">
-    <button class="back">
-      <span class="visually-hidden">Вернуться к началу</span>
-      <svg class="icon" width="45" height="45" viewBox="0 0 45 45" fill="#000000">
-        <use xlink:href="img/sprite.svg#arrow-left"></use>
-      </svg>
-      <svg class="icon" width="101" height="44" viewBox="0 0 101 44" fill="#000000">
-        <use xlink:href="img/sprite.svg#logo-small"></use>
-      </svg>
-    </button>
-  </header>
+import {gameFieldElement, clearElement, getElementFromString} from './util';
+import {renderHeader} from './header';
+import {renderGame} from './game/game-screen';
+const template = `
   <section class="rules">
     <h2 class="rules__title">Правила</h2>
     <ul class="rules__description">
@@ -37,11 +28,11 @@ const loadSavedName = (inputField, submitButton) => {
   inputField.focus();
 };
 
-const rulesInit = (cb) => {
+const initialize = () => {
   const form = document.querySelector(`.rules__form`);
   const submitButton = document.querySelector(`.rules__button`);
   const nameInput = document.querySelector(`.rules__input`);
-  util.initRestart(cb);
+
   // загружает имя пользователя, если он уже вводил его когда-то.
   loadSavedName(nameInput, submitButton);
 
@@ -53,16 +44,16 @@ const rulesInit = (cb) => {
     evt.preventDefault();
     // сохраняет имя пользователя, чтобы не вводить заново при новой игре
     localStorage.setItem(`pixelhunterName`, nameInput.value);
-    cb(true);
+    renderGame();
   };
 
   nameInput.addEventListener(`input`, onNameInputInput);
   form.addEventListener(`submit`, onFormSubmit);
 };
 
-const result = {
-  element: util.getElementFromString(TEMPLATE),
-  init: (cbNextScreen)=> rulesInit(cbNextScreen)
+export const renderRules = () => {
+  clearElement(gameFieldElement);
+  renderHeader();
+  gameFieldElement.appendChild(getElementFromString(template));
+  initialize();
 };
-
-export default result;
