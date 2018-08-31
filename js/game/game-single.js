@@ -1,4 +1,4 @@
-import {gameFieldElement, getElementFromString} from '../util';
+import {gameFieldElement, getElementFromString, debugMode} from '../util';
 import {resize} from '../data/resize';
 import {generateAnswersListTemplate} from '../game/answer-row';
 import {onAnswer} from './game-screen';
@@ -7,8 +7,6 @@ const frame = {
   width: 705,
   height: 455
 };
-
-const debugMode = (window.location.hash === `#debug`);
 
 const generateTemplate = (container, image, answers) => {
   return `
@@ -45,7 +43,7 @@ const initialize = (image) => {
   for (let item of gameOptions) {
     if (item.classList.contains(`game__answer--${image.type}`)) {
       item.control.addEventListener(`click`, onRightAnswerClick);
-      if (debugMode) {
+      if (debugMode()) {
         item.style.outline = `solid 5px green`;
       }
     } else {

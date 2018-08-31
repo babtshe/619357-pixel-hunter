@@ -1,9 +1,8 @@
-import {gameFieldElement, getElementFromString} from '../util';
+import {gameFieldElement, getElementFromString, debugMode} from '../util';
 import {resize} from '../data/resize';
 import {generateAnswersListTemplate} from '../game/answer-row';
 import {onAnswer} from './game-screen';
 
-const debugMode = (window.location.hash === `#debug`);
 
 const frame = {
   width: 468,
@@ -49,7 +48,7 @@ const initialize = (images) => {
     let imageIndex = Math.floor(index / (gameOptions.length / images.length));
     if (item.classList.contains(`game__answer--${images[imageIndex].type}`)) {
       answers.push([item.control, true]);
-      if (debugMode) {
+      if (debugMode()) {
         item.style.outline = `solid 5px green`;
       }
     } else {

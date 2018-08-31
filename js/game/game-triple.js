@@ -1,10 +1,8 @@
-import {gameFieldElement, getElementFromString} from '../util';
+import {gameFieldElement, getElementFromString, debugMode} from '../util';
 import {resize} from '../data/resize';
 import {generateAnswersListTemplate} from '../game/answer-row';
 import {ImageType} from '../game';
 import {onAnswer} from './game-screen';
-
-const debugMode = (window.location.hash === `#debug`);
 
 const frame = {
   width: 304,
@@ -51,7 +49,7 @@ const initialize = (images) => {
   gameOptions.forEach((item, index) => {
     if (images[index].type === findSinglePictureType(images)) {
       item.addEventListener(`click`, onRightAnswerClick);
-      if (debugMode) {
+      if (debugMode()) {
         item.style.outline = `solid 5px green`;
       }
     } else {

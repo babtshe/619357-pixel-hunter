@@ -9,3 +9,5 @@ export const clearElement = (item) => {
     item.removeChild(item.firstChild);
   }
 };
+
+export const debugMode = () => window.location.hash === `#debug`;
