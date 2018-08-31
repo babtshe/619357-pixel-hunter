@@ -33,29 +33,31 @@ const generateTemplate = (container, images, answers) => {
 };
 
 const initialize = (images) => {
-  const gameOptions = document.querySelectorAll(`.game__answer`);
+  const gameOptions = document.querySelectorAll(`.game__answer input`);
   const answers = [];
 
   const onAnswerClick = () => {
-    const checkedAnswers = answers.filter((item) => item[0].checked);
+    const checkedAnswers = [...gameOptions].filter((item) => item.checked);
     if (checkedAnswers.length === images.length) {
-      const result = checkedAnswers.every((item) => item[1] === true);
+      const result = answers.every((item) => item[0].checked);
       onAnswer(result);
     }
   };
 
-  gameOptions.forEach((item, index) => {
-    let imageIndex = Math.floor(index / (gameOptions.length / images.length));
-    if (item.classList.contains(`game__answer--${images[imageIndex].type}`)) {
-      answers.push([item.control, true]);
-      if (debugMode()) {
-        item.style.outline = `solid 5px green`;
-      }
-    } else {
-      answers.push([item.control, false]);
+  images.forEach((item, index) => {
+    const rightAnswer = [...gameOptions].find((option) => {
+      return option.name === `question${index + 1}`
+      && option.value === item.type;
+    });
+    answers.push([rightAnswer, true]);
+    if (debugMode()) {
+      rightAnswer.parentElement.style.outline = `solid 5px green`;
     }
-    item.control.addEventListener(`click`, onAnswerClick);
   });
+
+  for (const item of gameOptions) {
+    item.addEventListener(`click`, onAnswerClick);
+  }
 };
 
 export const renderGameDouble = (images, answers) => {
