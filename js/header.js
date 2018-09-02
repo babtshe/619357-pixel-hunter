@@ -1,7 +1,6 @@
+import AbstractView from './abstract-view';
 import {MAX_LIVES} from './game';
-import {getElementFromString, gameFieldElement} from './util';
-import {renderGreeting} from './greeting';
-import {renderModalConfirm} from './modal-confirm';
+import ModalConfirmView from './modal-confirm';
 
 const generateLivesTemplate = (lives, maxLives) => {
   const emptyLives = new Array(maxLives - Math.max(0, lives))
@@ -33,21 +32,32 @@ const generateHeaderTemplate = (time, lives) => {
   </header>`;
 };
 
-const addListener = (noModal) => {
-  const onRestartElementClick = () => {
-    if (noModal) {
-      renderGreeting();
-    } else {
-      renderModalConfirm(renderGreeting);
-    }
-  };
-  const restartElement = document.querySelector(`button.back`);
-  restartElement.addEventListener(`click`, onRestartElementClick);
-};
+export default class HeaderView extends AbstractView {
+  constructor(time, lives, noModal) {
+    super();
+    this.time = time;
+    this.lives = lives;
+    this.noModal = noModal;
+  }
 
-export const renderHeader = (time, lives, noModal) => {
-  const template = getElementFromString(generateHeaderTemplate(time, lives));
-  gameFieldElement.appendChild(template);
-  addListener(noModal);
-};
+  get template() {
+    return generateHeaderTemplate(this.time, this.lives);
+  }
 
+  bind() {
+    const onRestartElementClick = () => {
+      this.onClick();
+      if (this.noModal) {
+        this.onClick();
+      } else {
+        const modal = new ModalConfirmView();
+        modal.onConfirm = () => this.onClick();
+
+      }
+    };
+    const restartElement = this.element.querySelector(`button.back`);
+    restartElement.addEventListener(`click`, onRestartElementClick);
+  }
+
+  onClick() {}
+}

@@ -1,8 +1,8 @@
-import {gameFieldElement, getElementFromString, debugMode} from '../util';
+import AbstractView from '../abstract-view';
+import {debugMode} from '../util';
 import {resize} from '../data/resize';
 import {generateAnswersListTemplate} from '../game/answer-row';
 import {ImageType} from '../game';
-import {onAnswer} from './game-screen';
 
 const frame = {
   width: 304,
@@ -35,31 +35,37 @@ const generateTemplate = (container, images, answers) => {
   </section>`;
 };
 
-const initialize = (images) => {
-  const gameOptions = document.querySelectorAll(`.game__option`);
+export default class GameTripleView extends AbstractView {
+  constructor(images, answers) {
+    super();
+    this.images = images;
+    this.answers = answers;
+  }
 
-  const onRightAnswerClick = () => {
-    onAnswer(true);
-  };
+  get template() {
+    return generateTemplate(frame, this.images, this.answers);
+  }
 
-  const onWrongAnswerClick = () => {
-    onAnswer(false);
-  };
+  bind() {
+    const gameOptions = this.element.querySelectorAll(`.game__option`);
 
-  gameOptions.forEach((item, index) => {
-    if (images[index].type === findSinglePictureType(images)) {
-      item.addEventListener(`click`, onRightAnswerClick);
-      if (debugMode()) {
-        item.style.outline = `solid 5px green`;
+    const onRightAnswerClick = () => {
+      this.onAnswer(true);
+    };
+
+    const onWrongAnswerClick = () => {
+      this.onAnswer(false);
+    };
+
+    gameOptions.forEach((item, index) => {
+      if (this.images[index].type === findSinglePictureType(this.images)) {
+        item.addEventListener(`click`, onRightAnswerClick);
+        if (debugMode()) {
+          item.style.outline = `solid 5px green`;
+        }
+      } else {
+        item.addEventListener(`click`, onWrongAnswerClick);
       }
-    } else {
-      item.addEventListener(`click`, onWrongAnswerClick);
-    }
-  });
-};
-
-export const renderGameTriple = (images, answers) => {
-  const doubleGameElement = getElementFromString(generateTemplate(frame, images, answers));
-  gameFieldElement.appendChild(doubleGameElement);
-  initialize(images);
-};
+    });
+  }
+}

@@ -1,5 +1,5 @@
-import {gameFieldElement, getElementFromString, clearElement} from './util';
-import {renderHeader} from './header';
+import AbstractView from './abstract-view';
+import HeaderView from './header';
 import {generateAnswersListTemplate} from './game/answer-row';
 import {calculateScores, POINT_COST, Answer} from './game';
 const LAST_GAME = 0;
@@ -7,7 +7,7 @@ const Titles = {
   WIN: `Победа!`,
   LOSE: `Поражение!`
 };
-let scoresStorage = [];
+
 const generateTemplate = (stateList) => {
   const gameScores = [];
   stateList.forEach((state, index) => {
@@ -90,9 +90,36 @@ const calculateStatistics = (answers, lives) => {
       });
 };
 
-export const renderStats = (answers, lives) => {
-  scoresStorage.unshift(calculateStatistics(answers, lives));
-  clearElement(gameFieldElement);
-  renderHeader(undefined, undefined, true);
-  gameFieldElement.appendChild(getElementFromString(generateTemplate(scoresStorage)));
-};
+export default class StatsView extends AbstractView {
+  constructor() {
+    super();
+    this.scoresStorage = [];
+  }
+
+  get template() {
+    return generateTemplate(this.scoresStorage);
+  }
+
+  render(answers, lives) {
+    if (answers) {
+      this.scoresStorage.unshift(calculateStatistics(answers, lives));
+    }
+    return super.render(this.template);
+  }
+
+  get element() {
+    if (this._element && this._element.children.length) {
+      return this._element;
+    }
+    const header = new HeaderView(undefined, undefined, true);
+    header.onClick = () => this.onHeaderClick();
+    const fragment = document.createDocumentFragment();
+    fragment.appendChild(header.element);
+    fragment.appendChild(this.render());
+    this._element = fragment;
+    this.bind(this._element);
+    return this._element;
+  }
+
+  onHeaderClick() {}
+}

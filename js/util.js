@@ -11,3 +11,10 @@ export const clearElement = (item) => {
 };
 
 export const debugMode = () => window.location.hash === `#debug`;
+
+export const showScreen = (...screenElements) => {
+  clearElement(gameFieldElement);
+  for (const element of screenElements) {
+    gameFieldElement.appendChild(element);
+  }
+};

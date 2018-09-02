@@ -1,7 +1,7 @@
-import {gameFieldElement, getElementFromString, debugMode} from '../util';
+import AbstractView from '../abstract-view';
+import {debugMode} from '../util';
 import {resize} from '../data/resize';
 import {generateAnswersListTemplate} from '../game/answer-row';
-import {onAnswer} from './game-screen';
 
 const frame = {
   width: 705,
@@ -29,31 +29,38 @@ const generateTemplate = (container, image, answers) => {
   </section>`;
 };
 
-const initialize = (image) => {
-  const gameOptions = document.querySelectorAll(`.game__answer`);
+export default class GameSingleView extends AbstractView {
+  constructor(image, answers) {
+    super();
+    this.image = image[0];
+    this.answers = answers;
+  }
 
-  const onRightAnswerClick = () => {
-    onAnswer(true);
-  };
+  get template() {
+    return generateTemplate(frame, this.image, this.answers);
+  }
 
-  const onWrongAnswerClick = () => {
-    onAnswer(false);
-  };
+  bind() {
+    const gameOptions = this.element.querySelectorAll(`.game__answer`);
+    const onRightAnswerClick = () => {
+      this.onAnswer(true);
+    };
 
-  for (let item of gameOptions) {
-    if (item.classList.contains(`game__answer--${image.type}`)) {
-      item.control.addEventListener(`click`, onRightAnswerClick);
-      if (debugMode()) {
-        item.style.outline = `solid 5px green`;
+    const onWrongAnswerClick = () => {
+      this.onAnswer(false);
+    };
+
+    for (let item of gameOptions) {
+      if (item.classList.contains(`game__answer--${this.image.type}`)) {
+        item.control.addEventListener(`click`, onRightAnswerClick);
+        if (debugMode()) {
+          item.style.outline = `solid 5px green`;
+        }
+      } else {
+        item.control.addEventListener(`click`, onWrongAnswerClick);
       }
-    } else {
-      item.control.addEventListener(`click`, onWrongAnswerClick);
     }
   }
-};
 
-export const renderGameSingle = (image, answers) => {
-  const singleGameElement = getElementFromString(generateTemplate(frame, image[0], answers));
-  gameFieldElement.appendChild(singleGameElement);
-  initialize(image[0]);
-};
+  onAnswer() {}
+}

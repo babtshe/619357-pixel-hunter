@@ -1,13 +1,13 @@
-import {gameFieldElement, getElementFromString, debugMode} from '../util';
+import AbstractView from '../abstract-view';
+import {debugMode} from '../util';
 import {resize} from '../data/resize';
 import {generateAnswersListTemplate} from '../game/answer-row';
-import {onAnswer} from './game-screen';
-
 
 const frame = {
   width: 468,
   height: 458
 };
+
 const generateTemplate = (container, images, answers) => {
   return `
   <section class="game">
@@ -32,36 +32,44 @@ const generateTemplate = (container, images, answers) => {
   </section>`;
 };
 
-const initialize = (images) => {
-  const gameOptions = document.querySelectorAll(`.game__answer input`);
-  const answers = [];
-
-  const onAnswerClick = () => {
-    const checkedAnswers = [...gameOptions].filter((item) => item.checked);
-    if (checkedAnswers.length === images.length) {
-      const result = answers.every((item) => item[0].checked);
-      onAnswer(result);
-    }
-  };
-
-  images.forEach((item, index) => {
-    const rightAnswer = [...gameOptions].find((option) => {
-      return option.name === `question${index + 1}`
-      && option.value === item.type;
-    });
-    answers.push([rightAnswer, true]);
-    if (debugMode()) {
-      rightAnswer.parentElement.style.outline = `solid 5px green`;
-    }
-  });
-
-  for (const item of gameOptions) {
-    item.addEventListener(`click`, onAnswerClick);
+export default class GameDoubleView extends AbstractView {
+  constructor(images, answers) {
+    super();
+    this.images = images;
+    this.answers = answers;
   }
-};
 
-export const renderGameDouble = (images, answers) => {
-  const doubleGameElement = getElementFromString(generateTemplate(frame, images, answers));
-  gameFieldElement.appendChild(doubleGameElement);
-  initialize(images);
-};
+  get template() {
+    return generateTemplate(frame, this.images, this.answers);
+  }
+
+  bind() {
+    const gameOptions = this.element.querySelectorAll(`.game__answer input`);
+    const answers = [];
+
+    const onAnswerClick = () => {
+      const checkedAnswers = [...gameOptions].filter((item) => item.checked);
+      if (checkedAnswers.length === this.images.length) {
+        const result = answers.every((item) => item[0].checked);
+        this.onAnswer(result);
+      }
+    };
+
+    this.images.forEach((item, index) => {
+      const rightAnswer = [...gameOptions].find((option) => {
+        return option.name === `question${index + 1}`
+        && option.value === item.type;
+      });
+      answers.push([rightAnswer, true]);
+      if (debugMode()) {
+        rightAnswer.parentElement.style.outline = `solid 5px green`;
+      }
+    });
+
+    for (const item of gameOptions) {
+      item.addEventListener(`click`, onAnswerClick);
+    }
+  }
+
+  onAnswer() {}
+}
