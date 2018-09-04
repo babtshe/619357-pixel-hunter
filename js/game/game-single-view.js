@@ -1,20 +1,20 @@
 import AbstractView from '../abstract-view';
+import AnswerRowView from './answer-row-view';
 import {debugMode} from '../util';
 import {resize} from '../data/resize';
-import {generateAnswersListTemplate} from '../game/answer-row';
 
-const frame = {
+const FRAME = {
   width: 705,
   height: 455
 };
 
-const generateTemplate = (container, image, answers) => {
+const generateTemplate = (image, answerRow) => {
   return `
   <section class="game">
     <p class="game__task">Угадай, фото или рисунок?</p>
     <form class="game__content  game__content--wide">
       <div class="game__option">
-        <img src="${image.src}" alt="Option 1" width="${resize(container, image).width}" height="${resize(container, image).height}">
+        <img src="${image.src}" alt="Option 1" width="${resize(FRAME, image).width}" height="${resize(FRAME, image).height}">
         <label class="game__answer  game__answer--photo">
           <input class="visually-hidden" name="question1" type="radio" value="photo">
           <span>Фото</span>
@@ -25,7 +25,7 @@ const generateTemplate = (container, image, answers) => {
         </label>
       </div>
     </form>
-    ${generateAnswersListTemplate(answers)}
+    ${answerRow}
   </section>`;
 };
 
@@ -33,11 +33,11 @@ export default class GameSingleView extends AbstractView {
   constructor(image, answers) {
     super();
     this.image = image[0];
-    this.answers = answers;
+    this.answerRow = new AnswerRowView(answers).template;
   }
 
   get template() {
-    return generateTemplate(frame, this.image, this.answers);
+    return generateTemplate(this.image, this.answerRow);
   }
 
   bind() {

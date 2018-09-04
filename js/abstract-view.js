@@ -1,7 +1,4 @@
-
-const render = (template) => {
-  return document.createRange().createContextualFragment(template);
-};
+import {getElementFromString} from './util';
 
 export default class AbstractView {
   constructor() {
@@ -13,8 +10,8 @@ export default class AbstractView {
     throw new Error(`Template нужно переопределить!`);
   }
 
-  render(element) {
-    return render(element ? element : this.template);
+  render() {
+    return getElementFromString(this.template);
   }
 
   bind() {}

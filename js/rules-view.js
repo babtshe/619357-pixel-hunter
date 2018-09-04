@@ -1,5 +1,6 @@
 import AbstractView from './abstract-view';
-import HeaderView from './header';
+import HeaderView from './header-view';
+import ModalConfirmView from './modal-confirm-view';
 
 const loadSavedName = (inputField, submitButton) => {
   const savedName = localStorage.getItem(`pixelhunterName`);
@@ -13,6 +14,10 @@ const loadSavedName = (inputField, submitButton) => {
 export default class RulesView extends AbstractView {
   constructor() {
     super();
+    this.modal = new ModalConfirmView();
+    this.header = new HeaderView();
+    this.header.onBackClick = () => this.modal.show();
+    this.modal.onConfirm = () => this.onBackClick();
   }
 
   get template() {
@@ -39,11 +44,8 @@ export default class RulesView extends AbstractView {
     if (this._element && this._element.children.length) {
       return this._element;
     }
-    const header = new HeaderView();
-    header.onClick = () => this.onHeaderClick();
     const fragment = document.createDocumentFragment();
-    fragment.appendChild(header.element);
-    fragment.appendChild(this.render());
+    fragment.append(this.header.element, this.modal.element, this.render());
     this._element = fragment;
     this.bind(this._element);
     return this._element;
@@ -65,13 +67,13 @@ export default class RulesView extends AbstractView {
       evt.preventDefault();
       // сохраняет имя пользователя, чтобы не вводить заново при новой игре
       localStorage.setItem(`pixelhunterName`, nameInput.value);
-      this.onClick();
+      this.onStartClick();
     };
 
     nameInput.addEventListener(`input`, onNameInputInput);
     form.addEventListener(`submit`, onFormSubmit);
   }
 
-  onClick() {}
-  onHeaderClick() {}
+  onStartClick() {}
+  onBackClick() {}
 }

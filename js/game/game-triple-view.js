@@ -1,10 +1,10 @@
 import AbstractView from '../abstract-view';
 import {debugMode} from '../util';
 import {resize} from '../data/resize';
-import {generateAnswersListTemplate} from '../game/answer-row';
+import AnswerRowView from './answer-row-view';
 import {ImageType} from '../game';
 
-const frame = {
+const FRAME = {
   width: 304,
   height: 455
 };
@@ -19,7 +19,7 @@ const findSinglePictureType = (images) => {
   return isPhoto ? ImageType.PHOTO : ImageType.PAINTING;
 };
 
-const generateTemplate = (container, images, answers) => {
+const generateTemplate = (images, answerRow) => {
   return `
   <section class="game">
     <p class="game__task">Найдите ${findSinglePictureType(images) === ImageType.PHOTO ? `фотографию` : `рисунок`} среди изображений</p>
@@ -27,11 +27,11 @@ const generateTemplate = (container, images, answers) => {
   ${images.map((item, index) => {
     return `
       <div class="game__option">
-        <img src="${item.src}" alt="Option ${index + 1}" width="${resize(container, item).width}" height="${resize(container, item).height}">
+        <img src="${item.src}" alt="Option ${index + 1}" width="${resize(FRAME, item).width}" height="${resize(FRAME, item).height}">
       </div>`;
   }).join(``)}
     </form>
-    ${generateAnswersListTemplate(answers)}
+    ${answerRow}
   </section>`;
 };
 
@@ -39,11 +39,11 @@ export default class GameTripleView extends AbstractView {
   constructor(images, answers) {
     super();
     this.images = images;
-    this.answers = answers;
+    this.answerRow = new AnswerRowView(answers).template;
   }
 
   get template() {
-    return generateTemplate(frame, this.images, this.answers);
+    return generateTemplate(this.images, this.answerRow);
   }
 
   bind() {

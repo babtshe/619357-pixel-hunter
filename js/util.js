@@ -1,7 +1,9 @@
 export const gameFieldElement = document.querySelector(`#main`);
 
 export const getElementFromString = (value) => {
-  return document.createRange().createContextualFragment(value);
+  const wrapper = document.createElement(`div`);
+  wrapper.appendChild(document.createRange().createContextualFragment(value));
+  return wrapper.firstElementChild;
 };
 
 export const clearElement = (item) => {
@@ -12,9 +14,13 @@ export const clearElement = (item) => {
 
 export const debugMode = () => window.location.hash === `#debug`;
 
-export const showScreen = (...screenElements) => {
+export const showScreen = (screenElements) => {
   clearElement(gameFieldElement);
-  for (const element of screenElements) {
-    gameFieldElement.appendChild(element);
+  if (screenElements.length) {
+    for (const item of screenElements) {
+      gameFieldElement.appendChild(item);
+    }
+  } else {
+    gameFieldElement.appendChild(screenElements);
   }
 };

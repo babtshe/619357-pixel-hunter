@@ -1,6 +1,5 @@
 import AbstractView from './abstract-view';
 import {MAX_LIVES} from './game';
-import ModalConfirmView from './modal-confirm';
 
 const generateLivesTemplate = (lives, maxLives) => {
   const emptyLives = new Array(maxLives - Math.max(0, lives))
@@ -33,11 +32,10 @@ const generateHeaderTemplate = (time, lives) => {
 };
 
 export default class HeaderView extends AbstractView {
-  constructor(time, lives, noModal) {
+  constructor(time, lives) {
     super();
     this.time = time;
     this.lives = lives;
-    this.noModal = noModal;
   }
 
   get template() {
@@ -45,19 +43,9 @@ export default class HeaderView extends AbstractView {
   }
 
   bind() {
-    const onRestartElementClick = () => {
-      this.onClick();
-      if (this.noModal) {
-        this.onClick();
-      } else {
-        const modal = new ModalConfirmView();
-        modal.onConfirm = () => this.onClick();
-
-      }
-    };
-    const restartElement = this.element.querySelector(`button.back`);
-    restartElement.addEventListener(`click`, onRestartElementClick);
+    const backElement = this.element.querySelector(`button.back`);
+    backElement.addEventListener(`click`, this.onBackClick);
   }
 
-  onClick() {}
+  onBackClick() {}
 }
