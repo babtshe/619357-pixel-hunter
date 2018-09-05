@@ -12,7 +12,7 @@ export const getElementFromString = (value) => {
   return wrapper.firstElementChild;
 };
 
-export const debugMode = () => window.location.hash === `#debug`;
+export const debugMode = () => window.location.hash.toLowerCase() === `#debug`;
 
 export const showScreen = (screenElement, clear = true) => {
   if (clear) {

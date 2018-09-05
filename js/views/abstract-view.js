@@ -1,4 +1,4 @@
-import {getElementFromString} from './util';
+import {getElementFromString} from '../util';
 
 export default class AbstractView {
   constructor() {

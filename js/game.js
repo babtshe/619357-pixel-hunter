@@ -31,8 +31,8 @@ export const calculateScores = (answers, lives) => {
   return (answers.reduce((accumulator, item) => accumulator + item) + lives) * POINT_COST;
 };
 
-export const calculateLives = (game, answerType) => {
-  const lives = game.lives - !answerType;
+export const calculateLives = (game, answer) => {
+  const lives = game.lives - !answer;
   return Object.assign({}, game, {lives});
 };
 

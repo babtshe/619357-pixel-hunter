@@ -1,4 +1,4 @@
-import AbstractView from '../abstract-view';
+import AbstractView from '../views/abstract-view';
 import {Answer} from '../game';
 import {levels} from '../data/level-data';
 
