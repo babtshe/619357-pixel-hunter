@@ -1,3 +1,4 @@
+import AbstractView from '../abstract-view';
 import {Answer} from '../game';
 import {levels} from '../data/level-data';
 
@@ -32,3 +33,14 @@ export const generateAnswersListTemplate = (answers) => {
    ${statsItems.join(``)}
   </ul>`;
 };
+
+export default class AnswerRowView extends AbstractView {
+  constructor(answers) {
+    super();
+    this.answers = answers;
+  }
+
+  get template() {
+    return generateAnswersListTemplate(this.answers);
+  }
+}

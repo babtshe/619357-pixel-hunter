@@ -1,11 +1,10 @@
-import {gameFieldElement, clearElement} from '../util';
-import {renderHeader} from '../header';
+import AbstractView from '../abstract-view';
+import HeaderView from '../header-view';
+import GameSingleView from './game-single-view';
+import GameDoubleView from './game-double-view';
+import GameTripleView from './game-triple-view';
 import {INITIAL_GAME, changeLevel, addAnswer, calculateLives} from '../game';
 import {levels} from '../data/level-data';
-import {renderStats} from '../stats';
-import {renderGameSingle} from './game-single';
-import {renderGameDouble} from './game-double';
-import {renderGameTriple} from './game-triple';
 
 const GameModule = {
   SINGLE: 1,
@@ -13,37 +12,74 @@ const GameModule = {
   TRIPLE: 3
 };
 
-let currentGame = INITIAL_GAME;
-
-export const onAnswer = (answer) => {
-  currentGame = addAnswer(currentGame, answer);
-  currentGame = calculateLives(currentGame, answer);
-  currentGame = changeLevel(currentGame, currentGame.level + 1);
-  renderGameLevel(levels[currentGame.level]);
-};
-
-const renderGameLevel = (level) => {
-  if (!level || currentGame.lives < 0) {
-    renderStats(currentGame.answers, currentGame.lives);
-    return;
+export default class GameScreenView extends AbstractView {
+  constructor() {
+    super();
+    this.currentGame = INITIAL_GAME;
+    this.header = new HeaderView(this.currentGame.timer, this.currentGame.lives);
+    this.header.onBackClick = () => this.onBackClick();
+    this.game = this._getGameLevel(levels[this.currentGame.level]);
+    this.root = document.createElement(`div`);
+    this.root.appendChild(this.header.element);
+    this.root.appendChild(this.game.element);
   }
-  clearElement(gameFieldElement);
-  renderHeader(currentGame.timer, currentGame.lives);
-  switch (level.length) {
-    case GameModule.SINGLE:
-      renderGameSingle(level, currentGame.answers);
-      break;
-    case GameModule.DOUBLE:
-      renderGameDouble(level, currentGame.answers);
-      break;
-    case GameModule.TRIPLE:
-      renderGameTriple(level, currentGame.answers);
-      break;
-  }
-};
 
-export const renderGame = () => {
-  currentGame = INITIAL_GAME;
-  renderGameLevel(levels[currentGame.level]);
-};
+  get template() {
+    return ``;
+  }
+
+  get element() {
+    return this.root;
+  }
+
+  _getGameLevel(level) {
+    if (!level || this.currentGame.lives < 0) {
+      this.onGameEnd(this.currentGame.answers, this.currentGame.lives);
+      return ``;
+    }
+    switch (level.length) {
+      case GameModule.SINGLE:
+        const gameSingle = new GameSingleView(level, this.currentGame.answers);
+        gameSingle.onAnswer = (answer) => this._onAnswer(answer);
+        return gameSingle;
+      case GameModule.DOUBLE:
+        const gameDouble = new GameDoubleView(level, this.currentGame.answers);
+        gameDouble.onAnswer = (answer) => this._onAnswer(answer);
+        return gameDouble;
+      case GameModule.TRIPLE:
+        const gameTriple = new GameTripleView(level, this.currentGame.answers);
+        gameTriple.onAnswer = (answer) => this._onAnswer(answer);
+        return gameTriple;
+      default:
+        return ``;
+    }
+  }
+
+  updateHeader() {
+    const newHeader = new HeaderView(this.currentGame.timer, this.currentGame.lives);
+    newHeader.onBackClick = () => this.onBackClick();
+    this.root.replaceChild(newHeader.element, this.header.element);
+    this.header = newHeader;
+  }
+
+  updateGame() {
+    const newGame = this._getGameLevel(levels[this.currentGame.level]);
+    if (newGame) {
+      this.root.replaceChild(newGame.element, this.game.element);
+      this.game = newGame;
+    }
+  }
+
+  _onAnswer(answer) {
+    this.currentGame = addAnswer(this.currentGame, answer);
+    this.currentGame = calculateLives(this.currentGame, answer);
+    this.currentGame = changeLevel(this.currentGame, this.currentGame.level + 1);
+    this.updateHeader();
+    this.updateGame();
+  }
+
+  onGameEnd() {}
+
+  onBackClick() {}
+}
 
