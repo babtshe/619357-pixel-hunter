@@ -14,6 +14,12 @@
 
   background: url("../img/egg_big.png") no-repeat center;
   background-size: contain;
+
+  &--blur {
+    transition: background-image 1s ease-in-out;
+    background: url("../img/egg_distort.png") no-repeat center;
+    background-size: 97.5%;
+  }
 }
 
 .intro__asterisk {
@@ -25,12 +31,24 @@
   line-height: 128px;
 }
 
+.intro--blur .intro__asterisk {
+  transition: all 1s ease-in-out;
+  font-size: 80px;
+  transform: translate(-13px, -185px);
+  outline: none;
+}
+
 .intro__motto {
   margin: 0;
   margin-top: auto;
   position: relative;
 
   font-size: 18px;
+}
+
+.intro--blur .intro__motto {
+  transition: opacity 1s ease-in-out;
+  opacity: 0;
 }
 
 .intro__top {

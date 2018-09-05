@@ -13,7 +13,7 @@ export default class Application {
   static showIntro() {
     const intro = new IntroView();
     intro.onButtonClick = () => {
-      intro.element.classList.add(`greeting`, `central--blur`);
+      intro.element.classList.add(`intro--blur`);
       setTimeout(() => Application.showGreeting(), ANIMATION_DURATION);
     };
     showScreen(intro.element);

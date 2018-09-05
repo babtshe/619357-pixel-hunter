@@ -26,10 +26,6 @@ export default class GameScreen {
     return this.root;
   }
 
-  start() {
-
-  }
-
   _getLevelView(level) {
     if (this.model.gameOver) {
       this.onGameEnd(this.model.state.answers, this.model.state.lives);
