@@ -1,8 +1,8 @@
 import AbstractView from './abstract-view';
 export default class ModalConfirmView extends AbstractView {
-  constructor(document) {
+  constructor(currentDocument) {
     super();
-    this._document = document;
+    this._document = currentDocument;
   }
 
   get template() {

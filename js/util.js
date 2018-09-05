@@ -1,15 +1,15 @@
-export const gameFieldElement = document.querySelector(`#main`);
+const gameFieldElement = document.querySelector(`#main`);
+
+const clearElement = (item) => {
+  while (item.firstChild) {
+    item.removeChild(item.firstChild);
+  }
+};
 
 export const getElementFromString = (value) => {
   const wrapper = document.createElement(`div`);
   wrapper.appendChild(document.createRange().createContextualFragment(value));
   return wrapper.firstElementChild;
-};
-
-export const clearElement = (item) => {
-  while (item.firstChild) {
-    item.removeChild(item.firstChild);
-  }
 };
 
 export const debugMode = () => window.location.hash === `#debug`;

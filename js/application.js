@@ -1,5 +1,6 @@
 import {showScreen} from './util';
 import ModalConfirmView from './modal-confirm-view';
+import ModalErrorView from './modal-error-view';
 import IntroView from './intro-view';
 import GreetingView from './greeting-view';
 import RulesView from './rules-view';
@@ -46,6 +47,11 @@ export default class Application {
   static showModalConfirm() {
     const modal = new ModalConfirmView(document);
     modal.onConfirm = () => Application.showGreeting();
+    showScreen(modal.element, false);
+  }
+
+  static showModalError(message) {
+    const modal = new ModalErrorView(message);
     showScreen(modal.element, false);
   }
 }
