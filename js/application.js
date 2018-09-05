@@ -6,11 +6,14 @@ import RulesView from './rules-view';
 import GameScreenView from './game/game-screen';
 import StatsView from './stats-view';
 
-
+const ANIMATION_DURATION = 1000;
 export default class Application {
   static showIntro() {
     const intro = new IntroView();
-    intro.onButtonClick = () => Application.showGreeting();
+    intro.onButtonClick = () => {
+      intro.element.classList.add(`greeting`, `central--blur`);
+      setTimeout(() => Application.showGreeting(), ANIMATION_DURATION);
+    };
     showScreen(intro.element);
   }
 
@@ -41,7 +44,7 @@ export default class Application {
   }
 
   static showModalConfirm() {
-    const modal = new ModalConfirmView();
+    const modal = new ModalConfirmView(document);
     modal.onConfirm = () => Application.showGreeting();
     showScreen(modal.element, false);
   }

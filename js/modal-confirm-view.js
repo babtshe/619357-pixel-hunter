@@ -1,7 +1,8 @@
 import AbstractView from './abstract-view';
 export default class ModalConfirmView extends AbstractView {
-  constructor() {
+  constructor(document) {
     super();
+    this._document = document;
   }
 
   get template() {
@@ -22,7 +23,7 @@ export default class ModalConfirmView extends AbstractView {
   }
 
   hide() {
-    document.removeEventListener(`keydown`, this._onEscKeyDown);
+    this._document.removeEventListener(`keydown`, this._onEscKeyDown);
     this._element.remove();
   }
 
@@ -60,7 +61,7 @@ export default class ModalConfirmView extends AbstractView {
     this._modalCancelElement.addEventListener(`click`, onCancelElementClick);
     this._modalOkElement.addEventListener(`click`, onOkElementClick);
     this._modalOkElement.focus();
-    document.addEventListener(`keydown`, onEscKeyDown);
+    this._document.addEventListener(`keydown`, onEscKeyDown);
   }
 
   onConfirm() {}
