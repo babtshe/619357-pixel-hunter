@@ -1,6 +1,5 @@
 import AbstractView from '../abstract-view';
 import HeaderView from '../header-view';
-import ModalConfirmView from '../modal-confirm-view';
 import GameSingleView from './game-single-view';
 import GameDoubleView from './game-double-view';
 import GameTripleView from './game-triple-view';
@@ -17,14 +16,11 @@ export default class GameScreenView extends AbstractView {
   constructor() {
     super();
     this.currentGame = INITIAL_GAME;
-    this.modal = new ModalConfirmView();
     this.header = new HeaderView(this.currentGame.timer, this.currentGame.lives);
-    this.header.onBackClick = () => this.modal.show();
-    this.modal.onConfirm = () => this.onBackClick();
+    this.header.onBackClick = () => this.onBackClick();
     this.game = this._getGameLevel(levels[this.currentGame.level]);
     this.root = document.createElement(`div`);
     this.root.appendChild(this.header.element);
-    this.root.appendChild(this.modal.element);
     this.root.appendChild(this.game.element);
   }
 
@@ -61,6 +57,7 @@ export default class GameScreenView extends AbstractView {
 
   updateHeader() {
     const newHeader = new HeaderView(this.currentGame.timer, this.currentGame.lives);
+    newHeader.onBackClick = () => this.onBackClick();
     this.root.replaceChild(newHeader.element, this.header.element);
     this.header = newHeader;
   }

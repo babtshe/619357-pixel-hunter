@@ -1,4 +1,5 @@
 import AbstractView from './abstract-view';
+const ANIMATION_DURATION = 1000;
 
 export default class IntroView extends AbstractView {
   constructor() {
@@ -15,7 +16,11 @@ export default class IntroView extends AbstractView {
 
   bind() {
     const introButton = this.element.querySelector(`.intro__asterisk`);
-    introButton.addEventListener(`click`, this.onButtonClick);
+    const onButtonClick = () => {
+      this._element.classList.add(`greeting`, `central--blur`);
+      setTimeout(() => this.onButtonClick(), ANIMATION_DURATION);
+    };
+    introButton.addEventListener(`click`, onButtonClick);
   }
 
   onButtonClick() {}

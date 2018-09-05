@@ -14,13 +14,19 @@ export const clearElement = (item) => {
 
 export const debugMode = () => window.location.hash === `#debug`;
 
-export const showScreen = (screenElements) => {
-  clearElement(gameFieldElement);
-  if (screenElements.length) {
-    for (const item of screenElements) {
-      gameFieldElement.appendChild(item);
+export const showScreen = (screenElement, clear = true) => {
+  if (clear) {
+    clearElement(gameFieldElement);
+  }
+  const notUnique = [...gameFieldElement.children].some((item) => {
+    if (item.className === screenElement.className) {
+      gameFieldElement.replaceChild(screenElement, item);
+      return true;
     }
-  } else {
-    gameFieldElement.appendChild(screenElements);
+    return false;
+  });
+
+  if (!notUnique) {
+    gameFieldElement.appendChild(screenElement);
   }
 };

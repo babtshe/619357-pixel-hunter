@@ -1,6 +1,5 @@
 import AbstractView from './abstract-view';
 import HeaderView from './header-view';
-import ModalConfirmView from './modal-confirm-view';
 
 const loadSavedName = (inputField, submitButton) => {
   const savedName = localStorage.getItem(`pixelhunterName`);
@@ -14,10 +13,8 @@ const loadSavedName = (inputField, submitButton) => {
 export default class RulesView extends AbstractView {
   constructor() {
     super();
-    this.modal = new ModalConfirmView();
     this.header = new HeaderView();
-    this.header.onBackClick = () => this.modal.show();
-    this.modal.onConfirm = () => this.onBackClick();
+    this.header.onBackClick = () => this.onBackClick();
   }
 
   get template() {
@@ -45,7 +42,7 @@ export default class RulesView extends AbstractView {
       return this._element;
     }
     const fragment = document.createDocumentFragment();
-    fragment.append(this.header.element, this.modal.element, this.render());
+    fragment.append(this.header.element, this.render());
     this._element = fragment;
     this.bind(this._element);
     return this._element;
