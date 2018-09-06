@@ -52,9 +52,10 @@ export default class GameScreen {
   startTimer() {
     this._interval = setInterval(() => {
       this.model.tick();
-      this.updateHeader();
       if (!this.model.state.timer) {
         this._onAnswer(false);
+      } else {
+        this.updateHeader();
       }
     }, TIMER_INTERVAL);
   }
