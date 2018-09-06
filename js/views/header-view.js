@@ -1,5 +1,5 @@
 import AbstractView from './abstract-view';
-import {MAX_LIVES} from './game';
+import {MAX_LIVES} from '../game';
 
 const generateLivesTemplate = (lives, maxLives) => {
   const emptyLives = new Array(maxLives - Math.max(0, lives))
@@ -7,10 +7,7 @@ const generateLivesTemplate = (lives, maxLives) => {
   const fullLives = new Array(Math.max(0, lives))
     .fill(`<img src="img/heart__full.svg" class="game__heart" alt="Life" width="31" height="27">`);
 
-  return `
-  <div class="game__lives">
-  ${emptyLives.concat(fullLives).join(``)}
-  </div>`;
+  return emptyLives.concat(fullLives).join(``);
 };
 
 const generateHeaderTemplate = (time, lives) => {
@@ -26,7 +23,9 @@ const generateHeaderTemplate = (time, lives) => {
     </button>
   ${time !== undefined && lives !== undefined ?
     `<div class="game__timer">${time}</div>
-    ${generateLivesTemplate(lives, MAX_LIVES)}`
+    <div class="game__lives">
+    ${generateLivesTemplate(lives, MAX_LIVES)}
+    </div>`
     : ``}
   </header>`;
 };
@@ -34,15 +33,28 @@ const generateHeaderTemplate = (time, lives) => {
 export default class HeaderView extends AbstractView {
   constructor(time, lives) {
     super();
-    this.time = time;
-    this.lives = lives;
+    this._time = time;
+    this._lives = lives;
   }
 
   get template() {
-    return generateHeaderTemplate(this.time, this.lives);
+    return generateHeaderTemplate(this._time, this._lives);
+  }
+
+  update(time, lives) {
+    if (time !== this._time) {
+      this._timeElement.textContent = time;
+      this._time = time;
+    }
+    if (lives !== this.lives) {
+      this._livesElement.innerHTML = generateLivesTemplate(lives, MAX_LIVES);
+      this._lives = lives;
+    }
   }
 
   bind() {
+    this._timeElement = this.element.querySelector(`.game__timer`);
+    this._livesElement = this.element.querySelector(`.game__lives`);
     const backElement = this.element.querySelector(`button.back`);
     backElement.addEventListener(`click`, this.onBackClick);
   }

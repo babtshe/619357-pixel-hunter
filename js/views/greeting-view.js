@@ -7,7 +7,7 @@ export default class GreetingView extends AbstractView {
 
   get template() {
     return `
-    <section class="greeting central--blur">
+    <section class="greeting">
       <img class="greeting__logo" src="img/logo_ph-big.svg" width="201" height="89" alt="Pixel Hunter">
       <div class="greeting__asterisk asterisk"><span class="visually-hidden">Я просто красивая звёздочка</span>*</div>
       <div class="greeting__challenge">

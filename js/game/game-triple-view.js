@@ -1,4 +1,4 @@
-import AbstractView from '../abstract-view';
+import AbstractView from '../views/abstract-view';
 import {debugMode} from '../util';
 import {resize} from '../data/resize';
 import AnswerRowView from './answer-row-view';

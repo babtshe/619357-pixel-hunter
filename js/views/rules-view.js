@@ -64,7 +64,7 @@ export default class RulesView extends AbstractView {
       evt.preventDefault();
       // сохраняет имя пользователя, чтобы не вводить заново при новой игре
       localStorage.setItem(`pixelhunterName`, nameInput.value);
-      this.onStartClick();
+      this.onStartClick(nameInput.value);
     };
 
     nameInput.addEventListener(`input`, onNameInputInput);

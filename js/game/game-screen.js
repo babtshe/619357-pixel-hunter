@@ -1,53 +1,47 @@
-import AbstractView from '../abstract-view';
-import HeaderView from '../header-view';
+import HeaderView from '../views/header-view';
 import GameSingleView from './game-single-view';
 import GameDoubleView from './game-double-view';
 import GameTripleView from './game-triple-view';
-import {INITIAL_GAME, changeLevel, addAnswer, calculateLives} from '../game';
-import {levels} from '../data/level-data';
 
+const TIMER_INTERVAL = 1000;
 const GameModule = {
   SINGLE: 1,
   DOUBLE: 2,
   TRIPLE: 3
 };
 
-export default class GameScreenView extends AbstractView {
-  constructor() {
-    super();
-    this.currentGame = INITIAL_GAME;
-    this.header = new HeaderView(this.currentGame.timer, this.currentGame.lives);
+export default class GameScreen {
+  constructor(model) {
+    this.model = model;
+    this.header = new HeaderView(this.model.state.timer, this.model.state.lives);
     this.header.onBackClick = () => this.onBackClick();
-    this.game = this._getGameLevel(levels[this.currentGame.level]);
+    this.game = this._getLevelView(this.model.currentLevel);
     this.root = document.createElement(`div`);
     this.root.appendChild(this.header.element);
     this.root.appendChild(this.game.element);
-  }
-
-  get template() {
-    return ``;
+    this.startTimer();
   }
 
   get element() {
     return this.root;
   }
 
-  _getGameLevel(level) {
-    if (!level || this.currentGame.lives < 0) {
-      this.onGameEnd(this.currentGame.answers, this.currentGame.lives);
+  _getLevelView(level) {
+    if (this.model.gameOver) {
+      this.onGameEnd(this.model.state.answers, this.model.state.lives);
       return ``;
     }
     switch (level.length) {
       case GameModule.SINGLE:
-        const gameSingle = new GameSingleView(level, this.currentGame.answers);
+        const gameSingle = new GameSingleView(level, this.model.state.answers);
         gameSingle.onAnswer = (answer) => this._onAnswer(answer);
         return gameSingle;
       case GameModule.DOUBLE:
-        const gameDouble = new GameDoubleView(level, this.currentGame.answers);
+        const gameDouble = new GameDoubleView(level, this.model.state.answers);
         gameDouble.onAnswer = (answer) => this._onAnswer(answer);
         return gameDouble;
       case GameModule.TRIPLE:
-        const gameTriple = new GameTripleView(level, this.currentGame.answers);
+        const gameTriple = new GameTripleView(level, this.model.state.answers);
         gameTriple.onAnswer = (answer) => this._onAnswer(answer);
         return gameTriple;
       default:
@@ -55,25 +49,38 @@ export default class GameScreenView extends AbstractView {
     }
   }
 
+  startTimer() {
+    this._interval = setInterval(() => {
+      this.model.tick();
+      if (!this.model.state.timer) {
+        this._onAnswer(false);
+      } else {
+        this.updateHeader();
+      }
+    }, TIMER_INTERVAL);
+  }
+
+  stopTimer() {
+    clearInterval(this._interval);
+    this.model.resetTimer();
+  }
+
   updateHeader() {
-    const newHeader = new HeaderView(this.currentGame.timer, this.currentGame.lives);
-    newHeader.onBackClick = () => this.onBackClick();
-    this.root.replaceChild(newHeader.element, this.header.element);
-    this.header = newHeader;
+    this.header.update(this.model.state.timer, this.model.state.lives);
   }
 
   updateGame() {
-    const newGame = this._getGameLevel(levels[this.currentGame.level]);
+    const newGame = this._getLevelView(this.model.currentLevel);
     if (newGame) {
       this.root.replaceChild(newGame.element, this.game.element);
       this.game = newGame;
+      this.startTimer();
     }
   }
 
   _onAnswer(answer) {
-    this.currentGame = addAnswer(this.currentGame, answer);
-    this.currentGame = calculateLives(this.currentGame, answer);
-    this.currentGame = changeLevel(this.currentGame, this.currentGame.level + 1);
+    this.model.addAnswer(answer);
+    this.stopTimer();
     this.updateHeader();
     this.updateGame();
   }

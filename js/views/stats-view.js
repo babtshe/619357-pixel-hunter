@@ -1,7 +1,7 @@
 import AbstractView from './abstract-view';
 import HeaderView from './header-view';
-import {generateAnswersListTemplate} from './game/answer-row-view';
-import {calculateScores, POINT_COST, Answer} from './game';
+import {generateAnswersListTemplate} from '../game/answer-row-view';
+import {calculateScores, POINT_COST, Answer} from '../game';
 const LAST_GAME = 0;
 const Titles = {
   WIN: `Победа!`,
