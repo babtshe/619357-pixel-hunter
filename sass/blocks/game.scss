@@ -16,6 +16,11 @@
   @include bold-text;
   font-size: 60px;
   line-height: 45px;
+
+  &--blink {
+    color: $main-red-color;
+    animation: blink 1s infinite;
+  }
 }
 
 .game__task {
@@ -126,5 +131,11 @@
 
   &:active {
     border-color: $link-active-color;
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0;
   }
 }
