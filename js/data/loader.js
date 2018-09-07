@@ -33,11 +33,8 @@ export default class Loader {
     fetch(QUESTIONS_URL)
     .then(checkStatus)
     .then(getJSON)
-    .then((data) => {
-      this._data = adapter(data);
-      return this._data;
-    })
-    .then(this.preload.bind(this))
+    .then(adapter)
+    .then(this._preloadImages.bind(this))
     .catch((error) => this.onError(error));
   }
 
@@ -62,24 +59,24 @@ export default class Loader {
     .catch((err) => this.onError(err));
   }
 
-  preload(data) {
+  _preloadImages(data) {
     /* Прелоадер вставляет картинки в DOM. Оптимальнее было бы предзагружать картинки
     с помощью fetch, но многие из серверов не возвращают заголовок
     Access-Control-Allow-Origin и CORS блокирует загрузку скриптом.
     Кроме того, предзагрузка нужна для определения правильных размеров.
     */
-    this._preloadContainerElement = document.querySelector(`.central`);
+    const preloadContainerElement = document.querySelector(`.central`);
     const imagePromises = [];
     const container = document.createElement(`div`);
     for (const level of data) {
       level.map((image) => {
         const currentElement = getPreloadImageElement(image.src);
-
         const imageLoad = new Promise((resolve, reject) => {
           const notLoaded = setTimeout(() => reject(`Не удалось загрузить данные за отведенное время.`), LOAD_TIMEOUT);
           const onImageLoad = () => {
             clearTimeout(notLoaded);
             resolve(currentElement);
+            currentElement.removeEventListener(`load`, onImageLoad);
           };
           currentElement.addEventListener(`load`, onImageLoad);
         });
@@ -94,11 +91,11 @@ export default class Loader {
         container.appendChild(currentElement);
       });
     }
-    this._preloadContainerElement.appendChild(container);
+    preloadContainerElement.appendChild(container);
     this.onLoaderViewInit(imagePromises.length);
 
     Promise.all(imagePromises).then(() => {
-      this.onDataResponse(this._data);
+      this.onDataResponse(data);
     });
   }
 
