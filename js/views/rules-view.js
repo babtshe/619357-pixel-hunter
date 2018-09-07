@@ -38,7 +38,7 @@ export default class RulesView extends AbstractView {
   }
 
   get element() {
-    if (this._element && this._element.children.length) {
+    if (this._element) {
       return this._element;
     }
     const fragment = document.createDocumentFragment();

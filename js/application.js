@@ -57,21 +57,21 @@ export default class Application {
   static showGame(playerName) {
     const gameScreen = new GameScreen(new GameModel(playerName, levelData));
     gameScreen.onBackClick = () => Application.showModalConfirm();
-    gameScreen.onGameEnd = (answers, lives, player) => {
+    gameScreen.onGameEnd = (answers, lives, player, levelCount) => {
       const loader = new Loader();
       loader.onError = (err) => Application.showModalError(err);
       loader.sendStats(answers, lives, player)
-      .then(() => Application.showStats(player));
+      .then(() => Application.showStats(player, levelCount));
     };
     showScreen(gameScreen.element);
   }
 
-  static showStats(player) {
+  static showStats(player, levelCount) {
     const loader = new Loader();
     loader.onError = (err) => Application.showModalError(err);
     loader.loadStats(player)
     .then((data) => {
-      const stats = new StatsView(data);
+      const stats = new StatsView(data, levelCount);
       stats.onBackClick = () => Application.showGreeting();
       showScreen(stats.element);
     });

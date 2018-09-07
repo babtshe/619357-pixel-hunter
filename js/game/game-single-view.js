@@ -30,10 +30,10 @@ const generateTemplate = (image, answerRow) => {
 };
 
 export default class GameSingleView extends AbstractView {
-  constructor(image, answers) {
+  constructor(image, answers, levelCount) {
     super();
     this.image = image[0];
-    this.answerRow = new AnswerRowView(answers).template;
+    this.answerRow = new AnswerRowView(answers, levelCount).template;
   }
 
   get template() {

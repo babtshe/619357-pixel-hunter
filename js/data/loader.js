@@ -94,9 +94,7 @@ export default class Loader {
     preloadContainerElement.appendChild(container);
     this.onLoaderViewInit(imagePromises.length);
 
-    Promise.all(imagePromises).then(() => {
-      this.onDataResponse(data);
-    });
+    Promise.all(imagePromises).then(() => this.onDataResponse(data));
   }
 
   onLoaderViewInit() {}

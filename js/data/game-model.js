@@ -5,6 +5,7 @@ export default class GameModel {
   constructor(playerName, levelData) {
     this._levelData = levelData;
     this._state = INITIAL_GAME;
+    this.totalLevels = levelData.length;
     this.playerName = playerName;
   }
 

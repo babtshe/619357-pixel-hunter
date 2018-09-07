@@ -58,12 +58,12 @@ const generateTemplate = (stateList) => {
   </section>`;
 };
 
-const calculateStatistics = (answers, lives) => {
+const calculateStatistics = (answers, lives, levelCount) => {
   const scores = calculateScores(answers, lives);
   return Object.assign({},
       {
         title: scores ? Titles.WIN : Titles.LOSE,
-        answerList: generateAnswersListTemplate(answers),
+        answerList: generateAnswersListTemplate(answers, levelCount),
         score: {
           normal: {
             count: answers.reduce((total, item) => total + (item !== Answer.Type.WRONG), 0),
@@ -91,11 +91,12 @@ const calculateStatistics = (answers, lives) => {
 };
 
 export default class StatsView extends AbstractView {
-  constructor(results) {
+  constructor(results, levelCount) {
     super();
+    this.levelCount = levelCount;
     this.scoresStorage = [];
     for (const item of results) {
-      this.scoresStorage.unshift(calculateStatistics(item.answers, item.lives));
+      this.scoresStorage.unshift(calculateStatistics(item.answers, item.lives, this.levelCount));
     }
     this.header = new HeaderView();
     this.header.onBackClick = () => this.onBackClick();
@@ -106,7 +107,7 @@ export default class StatsView extends AbstractView {
   }
 
   get element() {
-    if (this._element && this._element.children.length) {
+    if (this._element) {
       return this._element;
     }
     const fragment = document.createDocumentFragment();

@@ -29,20 +29,20 @@ export default class GameScreen {
 
   _getLevelView(level) {
     if (this.model.gameOver) {
-      this.onGameEnd(this.model.state.answers, this.model.state.lives, this.model.playerName);
+      this.onGameEnd(this.model.state.answers, this.model.state.lives, this.model.playerName, this.model.totalLevels);
       return ``;
     }
     switch (level.length) {
       case GameModule.SINGLE:
-        const gameSingle = new GameSingleView(level, this.model.state.answers);
+        const gameSingle = new GameSingleView(level, this.model.state.answers, this.model.totalLevels);
         gameSingle.onAnswer = (answer) => this._onAnswer(answer);
         return gameSingle;
       case GameModule.DOUBLE:
-        const gameDouble = new GameDoubleView(level, this.model.state.answers);
+        const gameDouble = new GameDoubleView(level, this.model.state.answers, this.model.totalLevels);
         gameDouble.onAnswer = (answer) => this._onAnswer(answer);
         return gameDouble;
       case GameModule.TRIPLE:
-        const gameTriple = new GameTripleView(level, this.model.state.answers);
+        const gameTriple = new GameTripleView(level, this.model.state.answers, this.model.totalLevels);
         gameTriple.onAnswer = (answer) => this._onAnswer(answer);
         return gameTriple;
       default:

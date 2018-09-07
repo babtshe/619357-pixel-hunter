@@ -1,6 +1,5 @@
 import AbstractView from '../views/abstract-view';
 import {Answer} from '../game';
-import {levels} from '../data/level-data';
 
 const getStatClassByAnswerType = (answerType) => {
   switch (answerType) {
@@ -17,17 +16,17 @@ const getStatClassByAnswerType = (answerType) => {
   }
 };
 
-const fillUndefinedAnswers = (answers) => {
-  return new Array(levels.length - answers.length)
+const fillUndefinedAnswers = (answers, levelCount) => {
+  return new Array(levelCount - answers.length)
     .fill(`<li class="stats__result ${getStatClassByAnswerType()}"></li>`);
 };
 
-export const generateAnswersListTemplate = (answers) => {
+export const generateAnswersListTemplate = (answers, levelCount) => {
   let statsItems = [];
   for (const item of answers) {
     statsItems.push(`<li class="stats__result ${getStatClassByAnswerType(item)}"></li>`);
   }
-  statsItems = statsItems.concat(fillUndefinedAnswers(answers));
+  statsItems = statsItems.concat(fillUndefinedAnswers(answers, levelCount));
   return `
   <ul class="stats">
    ${statsItems.join(``)}
@@ -35,12 +34,13 @@ export const generateAnswersListTemplate = (answers) => {
 };
 
 export default class AnswerRowView extends AbstractView {
-  constructor(answers) {
+  constructor(answers, levelCount) {
     super();
     this.answers = answers;
+    this.levelCount = levelCount;
   }
 
   get template() {
-    return generateAnswersListTemplate(this.answers);
+    return generateAnswersListTemplate(this.answers, this.levelCount);
   }
 }
