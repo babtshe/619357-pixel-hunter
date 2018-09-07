@@ -19,12 +19,13 @@ const loadData = (cb) => {
   loader.onDataResponse = (data) => {
     levelData = data;
   };
-  loader.loaderViewInit = (length) => {
+  loader.onLoaderViewInit = (length) => {
     const loaderView = new LoaderView(length);
     loaderView.onFinish = () => cb();
     showScreen(loaderView.element, false);
     loader.onProgress = () => loaderView.nextPhase();
   };
+  loader.loadGameData();
 };
 export default class Application {
 
@@ -35,7 +36,7 @@ export default class Application {
       intro.element.classList.add(`intro--blur`);
       setTimeout(() => Application.showGreeting(), ANIMATION_DURATION);
     };
-    // intro.onButtonClick = () => nextScreen();
+    // TODO: Оставить или убрать? intro.onButtonClick = () => nextScreen();
     showScreen(intro.element);
     loadData(nextScreen);
   }
@@ -56,14 +57,25 @@ export default class Application {
   static showGame(playerName) {
     const gameScreen = new GameScreen(new GameModel(playerName, levelData));
     gameScreen.onBackClick = () => Application.showModalConfirm();
-    gameScreen.onGameEnd = (answers, lives) => Application.showStats(answers, lives);
+    gameScreen.onGameEnd = (answers, lives, player) => {
+      const loader = new Loader();
+      loader.onError = (err) => Application.showModalError(err);
+      loader.sendStats(answers, lives, player)
+      .then(() => Application.showStats(player));
+    };
     showScreen(gameScreen.element);
   }
 
-  static showStats(answers, lives) {
-    const stats = new StatsView(answers, lives);
-    stats.onBackClick = () => Application.showGreeting();
-    showScreen(stats.element);
+  static showStats(player) {
+    const loader = new Loader();
+    loader.onError = (err) => Application.showModalError(err);
+    loader.loadStats(player)
+    .then((data) => {
+      const stats = new StatsView(data);
+      stats.onBackClick = () => Application.showGreeting();
+      showScreen(stats.element);
+    });
+
   }
 
   static showModalConfirm() {

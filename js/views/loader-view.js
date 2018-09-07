@@ -46,6 +46,5 @@ export default class LoaderView extends AbstractView {
     }
   }
 
-
   onFinish() {}
 }

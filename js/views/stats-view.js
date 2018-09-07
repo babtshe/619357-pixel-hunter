@@ -91,9 +91,12 @@ const calculateStatistics = (answers, lives) => {
 };
 
 export default class StatsView extends AbstractView {
-  constructor(answers, lives) {
+  constructor(results) {
     super();
-    this.scoresStorage = [calculateStatistics(answers, lives)];
+    this.scoresStorage = [];
+    for (const item of results) {
+      this.scoresStorage.unshift(calculateStatistics(item.answers, item.lives));
+    }
     this.header = new HeaderView();
     this.header.onBackClick = () => this.onBackClick();
   }

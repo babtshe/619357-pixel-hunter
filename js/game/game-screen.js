@@ -29,7 +29,7 @@ export default class GameScreen {
 
   _getLevelView(level) {
     if (this.model.gameOver) {
-      this.onGameEnd(this.model.state.answers, this.model.state.lives);
+      this.onGameEnd(this.model.state.answers, this.model.state.lives, this.model.playerName);
       return ``;
     }
     switch (level.length) {
