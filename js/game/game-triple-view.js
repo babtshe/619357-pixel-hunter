@@ -12,9 +12,9 @@ const FRAME = {
 const findSinglePictureType = (images) => {
   const isPhoto = images.reduce((total, item) => {
     if (item.type === ImageType.PAINTING) {
-      return ++total;
+      return total + 1;
     }
-    return 0;
+    return total;
   }, -1);
   return isPhoto ? ImageType.PHOTO : ImageType.PAINTING;
 };

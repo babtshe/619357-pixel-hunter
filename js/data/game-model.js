@@ -1,11 +1,9 @@
 import {INITIAL_GAME, changeLevel, calculateTimeLeft, addAnswer, calculateLives} from '../game';
-import {levels} from './level-data';
-
 const TICK_DURATION = 1;
-const getLevel = (state) => levels[state.level];
 
 export default class GameModel {
-  constructor(playerName) {
+  constructor(playerName, levelData) {
+    this._levelData = levelData;
     this._state = INITIAL_GAME;
     this.playerName = playerName;
   }
@@ -19,7 +17,7 @@ export default class GameModel {
   }
 
   get currentLevel() {
-    return getLevel(this.state);
+    return this._levelData[this.state.level];
   }
 
   tick() {
@@ -35,5 +33,4 @@ export default class GameModel {
     this._state = calculateLives(this._state, answer);
     this._state = changeLevel(this._state, this._state.level + 1);
   }
-
 }
