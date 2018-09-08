@@ -41,7 +41,7 @@ export default class GameSingleView extends AbstractView {
   }
 
   bind() {
-    const gameOptionElements = this.element.querySelectorAll(`.game__answer`);
+    const gameOptionElements = this.element.querySelectorAll(`.game__answer input`);
     const onRightAnswerClick = () => {
       this.onAnswer(true);
     };
@@ -51,13 +51,13 @@ export default class GameSingleView extends AbstractView {
     };
 
     for (const item of gameOptionElements) {
-      if (item.classList.contains(`game__answer--${this.image.type}`)) {
-        item.control.addEventListener(`click`, onRightAnswerClick);
+      if (item.parentElement.classList.contains(`game__answer--${this.image.type}`)) {
+        item.addEventListener(`click`, onRightAnswerClick);
         if (debugMode()) {
-          item.style.outline = `solid 5px green`;
+          item.parentElement.style.outline = `solid 5px green`;
         }
       } else {
-        item.control.addEventListener(`click`, onWrongAnswerClick);
+        item.addEventListener(`click`, onWrongAnswerClick);
       }
     }
   }
