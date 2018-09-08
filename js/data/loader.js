@@ -1,9 +1,11 @@
 import {adapter} from './adapter';
 const LOAD_TIMEOUT = 20000;
-const QUESTIONS_URL = `https://es.dump.academy/pixel-hunter/questions`;
 const APP_ID = 619357;
 const DEFAULT_USER = `User`;
-const RESULTS_URL = `https://es.dump.academy/pixel-hunter/stats/${APP_ID}-`;
+const Url = {
+  QUESTIONS: `https://es.dump.academy/pixel-hunter/questions`,
+  RESULTS: `https://es.dump.academy/pixel-hunter/stats/${APP_ID}-`
+};
 
 const checkStatus = (response) => {
   if (response.ok) {
@@ -14,12 +16,13 @@ const checkStatus = (response) => {
 };
 const getJSON = (response) => response.json();
 const getPreloadImageElement = (src) => {
-  const image = document.createElement(`img`);
-  image.src = src;
-  image.width = 0;
-  image.height = 0;
-  image.visibility = `hidden`;
-  return image;
+  const imageElement = document.createElement(`img`);
+  imageElement.src = src;
+  imageElement.alt = `Image preload`;
+  imageElement.width = 0;
+  imageElement.height = 0;
+  imageElement.visibility = `hidden`;
+  return imageElement;
 };
 const sanitizeString = (value) => {
   return value.replace(/[^A-Za-zА-Яа-я0-9ё]/g, ``);
@@ -30,7 +33,7 @@ const getUserName = (name) => {
 
 export default class Loader {
   loadGameData() {
-    fetch(QUESTIONS_URL)
+    fetch(Url.QUESTIONS)
     .then(checkStatus)
     .then(getJSON)
     .then(adapter)
@@ -47,13 +50,13 @@ export default class Loader {
       },
       method: `POST`
     };
-    return fetch(`${RESULTS_URL}${getUserName(userName)}`, requestSettings)
+    return fetch(`${Url.RESULTS}${getUserName(userName)}`, requestSettings)
     .then(checkStatus)
     .catch((error) => this.onError(error));
   }
 
   loadStats(userName) {
-    return fetch(`${RESULTS_URL}${getUserName(userName)}`)
+    return fetch(`${Url.RESULTS}${getUserName(userName)}`)
     .then(checkStatus)
     .then(getJSON)
     .catch((error) => this.onError(error));
@@ -61,13 +64,13 @@ export default class Loader {
 
   _preloadImages(data) {
     /* Прелоадер вставляет картинки в DOM. Оптимальнее было бы предзагружать картинки
-    с помощью fetch, но многие из серверов не возвращают заголовок
-    Access-Control-Allow-Origin и CORS блокирует загрузку скриптом.
+    с помощью fetch или Image, но часть серверов, которые хранят картинки из списка с сайта академии,
+    не возвращает заголовок Access-Control-Allow-Origin и CORS блокирует загрузку скриптом.
     Кроме того, предзагрузка нужна для определения правильных размеров.
     */
     const preloadContainerElement = document.querySelector(`.central`);
     const imagePromises = [];
-    const container = document.createElement(`div`);
+    const containerElement = document.createElement(`div`);
     for (const level of data) {
       level.map((image) => {
         const currentElement = getPreloadImageElement(image.src);
@@ -88,10 +91,10 @@ export default class Loader {
         imageLoad.catch((message) => this.onError(message));
         imagePromises.push(imageLoad);
 
-        container.appendChild(currentElement);
+        containerElement.appendChild(currentElement);
       });
     }
-    preloadContainerElement.appendChild(container);
+    preloadContainerElement.appendChild(containerElement);
     this.onLoaderViewInit(imagePromises.length);
 
     Promise.all(imagePromises).then(() => this.onDataResponse(data));

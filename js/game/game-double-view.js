@@ -3,9 +3,9 @@ import AnswerRowView from './answer-row-view';
 import {debugMode} from '../util';
 import {resize} from '../data/resize';
 
-const FRAME = {
-  width: 468,
-  height: 458
+const Frame = {
+  WIDTH: 468,
+  HEIGHT: 458
 };
 
 const generateTemplate = (images, answerRow) => {
@@ -16,7 +16,7 @@ const generateTemplate = (images, answerRow) => {
   ${images.map((item, index) => {
     return `
     <div class="game__option">
-    <img src="${item.src}" alt="Option ${index + 1}" width="${resize(FRAME, item).width}" height="${resize(FRAME, item).height}">
+    <img src="${item.src}" alt="Option ${index + 1}" width="${resize(Frame, item).width}" height="${resize(Frame, item).height}">
     <label class="game__answer  game__answer--photo">
       <input class="visually-hidden" name="question${index + 1}" type="radio" value="photo">
       <span>Фото</span>

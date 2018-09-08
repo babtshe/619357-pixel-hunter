@@ -3,9 +3,9 @@ import AnswerRowView from './answer-row-view';
 import {debugMode} from '../util';
 import {resize} from '../data/resize';
 
-const FRAME = {
-  width: 705,
-  height: 455
+const Frame = {
+  WIDTH: 705,
+  HEIGHT: 455
 };
 
 const generateTemplate = (image, answerRow) => {
@@ -14,7 +14,7 @@ const generateTemplate = (image, answerRow) => {
     <p class="game__task">Угадай, фото или рисунок?</p>
     <form class="game__content  game__content--wide">
       <div class="game__option">
-        <img src="${image.src}" alt="Option 1" width="${resize(FRAME, image).width}" height="${resize(FRAME, image).height}">
+        <img src="${image.src}" alt="Option 1" width="${resize(Frame, image).width}" height="${resize(Frame, image).height}">
         <label class="game__answer  game__answer--photo">
           <input class="visually-hidden" name="question1" type="radio" value="photo">
           <span>Фото</span>

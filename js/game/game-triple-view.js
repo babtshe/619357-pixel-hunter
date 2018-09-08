@@ -4,9 +4,9 @@ import {resize} from '../data/resize';
 import AnswerRowView from './answer-row-view';
 import {ImageType} from '../game';
 
-const FRAME = {
-  width: 304,
-  height: 455
+const Frame = {
+  WIDTH: 304,
+  HEIGHT: 455
 };
 
 const findSinglePictureType = (images) => {
@@ -27,7 +27,7 @@ const generateTemplate = (images, answerRow) => {
   ${images.map((item, index) => {
     return `
       <div class="game__option">
-        <img src="${item.src}" alt="Option ${index + 1}" width="${resize(FRAME, item).width}" height="${resize(FRAME, item).height}">
+        <img src="${item.src}" alt="Option ${index + 1}" width="${resize(Frame, item).width}" height="${resize(Frame, item).height}">
       </div>`;
   }).join(``)}
     </form>
