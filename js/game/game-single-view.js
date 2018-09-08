@@ -41,7 +41,7 @@ export default class GameSingleView extends AbstractView {
   }
 
   bind() {
-    const gameOptions = this.element.querySelectorAll(`.game__answer`);
+    const gameOptionElements = this.element.querySelectorAll(`.game__answer`);
     const onRightAnswerClick = () => {
       this.onAnswer(true);
     };
@@ -50,7 +50,7 @@ export default class GameSingleView extends AbstractView {
       this.onAnswer(false);
     };
 
-    for (let item of gameOptions) {
+    for (const item of gameOptionElements) {
       if (item.classList.contains(`game__answer--${this.image.type}`)) {
         item.control.addEventListener(`click`, onRightAnswerClick);
         if (debugMode()) {

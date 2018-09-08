@@ -15,7 +15,7 @@ let levelData;
 
 const loadData = (cb) => {
   const loader = new Loader();
-  loader.onError = (err) => Application.showModalError(err);
+  loader.onError = (error) => Application.showModalError(error);
   loader.onDataResponse = (data) => {
     levelData = data;
   };
@@ -36,7 +36,6 @@ export default class Application {
       intro.element.classList.add(`intro--blur`);
       setTimeout(() => Application.showGreeting(), ANIMATION_DURATION);
     };
-    // TODO: Оставить или убрать? intro.onButtonClick = () => nextScreen();
     showScreen(intro.element);
     loadData(nextScreen);
   }
@@ -59,7 +58,7 @@ export default class Application {
     gameScreen.onBackClick = () => Application.showModalConfirm();
     gameScreen.onGameEnd = (answers, lives, player, levelCount) => {
       const loader = new Loader();
-      loader.onError = (err) => Application.showModalError(err);
+      loader.onError = (error) => Application.showModalError(error);
       loader.sendStats(answers, lives, player)
       .then(() => Application.showStats(player, levelCount));
     };
@@ -68,7 +67,7 @@ export default class Application {
 
   static showStats(player, levelCount) {
     const loader = new Loader();
-    loader.onError = (err) => Application.showModalError(err);
+    loader.onError = (error) => Application.showModalError(error);
     loader.loadStats(player)
     .then((data) => {
       const stats = new StatsView(data, levelCount);

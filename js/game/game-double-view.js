@@ -44,11 +44,11 @@ export default class GameDoubleView extends AbstractView {
   }
 
   bind() {
-    const gameOptions = this.element.querySelectorAll(`.game__answer input`);
+    const gameOptionElements = this.element.querySelectorAll(`.game__answer input`);
     const answers = [];
 
     const onAnswerClick = () => {
-      const checkedAnswers = [...gameOptions].filter((item) => item.checked);
+      const checkedAnswers = [...gameOptionElements].filter((item) => item.checked);
       if (checkedAnswers.length === this.images.length) {
         const result = answers.every((item) => item[0].checked);
         this.onAnswer(result);
@@ -56,7 +56,7 @@ export default class GameDoubleView extends AbstractView {
     };
 
     this.images.forEach((item, index) => {
-      const rightAnswer = [...gameOptions].find((option) => {
+      const rightAnswer = [...gameOptionElements].find((option) => {
         return option.name === `question${index + 1}`
         && option.value === item.type;
       });
@@ -66,7 +66,7 @@ export default class GameDoubleView extends AbstractView {
       }
     });
 
-    for (const item of gameOptions) {
+    for (const item of gameOptionElements) {
       item.addEventListener(`click`, onAnswerClick);
     }
   }

@@ -49,14 +49,14 @@ export default class Loader {
     };
     return fetch(`${RESULTS_URL}${getUserName(userName)}`, requestSettings)
     .then(checkStatus)
-    .catch((err) => this.onError(err));
+    .catch((error) => this.onError(error));
   }
 
   loadStats(userName) {
     return fetch(`${RESULTS_URL}${getUserName(userName)}`)
     .then(checkStatus)
     .then(getJSON)
-    .catch((err) => this.onError(err));
+    .catch((error) => this.onError(error));
   }
 
   _preloadImages(data) {

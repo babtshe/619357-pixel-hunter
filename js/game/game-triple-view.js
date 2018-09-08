@@ -47,7 +47,7 @@ export default class GameTripleView extends AbstractView {
   }
 
   bind() {
-    const gameOptions = this.element.querySelectorAll(`.game__option`);
+    const gameOptionElements = this.element.querySelectorAll(`.game__option`);
 
     const onRightAnswerClick = () => {
       this.onAnswer(true);
@@ -57,7 +57,7 @@ export default class GameTripleView extends AbstractView {
       this.onAnswer(false);
     };
 
-    gameOptions.forEach((item, index) => {
+    gameOptionElements.forEach((item, index) => {
       if (this.images[index].type === findSinglePictureType(this.images)) {
         item.addEventListener(`click`, onRightAnswerClick);
         if (debugMode()) {
