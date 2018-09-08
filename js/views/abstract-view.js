@@ -10,18 +10,18 @@ export default class AbstractView {
     throw new Error(`Template нужно переопределить!`);
   }
 
-  render() {
-    return getElementFromString(this.template);
-  }
-
-  bind() {}
-
   get element() {
-    if (this._element && this._element.children.length) {
+    if (this._element) {
       return this._element;
     }
     this._element = this.render();
     this.bind(this._element);
     return this._element;
   }
+
+  render() {
+    return getElementFromString(this.template);
+  }
+
+  bind() {}
 }

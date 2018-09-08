@@ -4,6 +4,7 @@ import GameDoubleView from './game-double-view';
 import GameTripleView from './game-triple-view';
 
 const TIMER_INTERVAL = 1000;
+const BLINK_TIME = 5;
 const GameModule = {
   SINGLE: 1,
   DOUBLE: 2,
@@ -28,20 +29,20 @@ export default class GameScreen {
 
   _getLevelView(level) {
     if (this.model.gameOver) {
-      this.onGameEnd(this.model.state.answers, this.model.state.lives);
+      this.onGameEnd(this.model.state.answers, this.model.state.lives, this.model.playerName, this.model.totalLevels);
       return ``;
     }
     switch (level.length) {
       case GameModule.SINGLE:
-        const gameSingle = new GameSingleView(level, this.model.state.answers);
+        const gameSingle = new GameSingleView(level, this.model.state.answers, this.model.totalLevels);
         gameSingle.onAnswer = (answer) => this._onAnswer(answer);
         return gameSingle;
       case GameModule.DOUBLE:
-        const gameDouble = new GameDoubleView(level, this.model.state.answers);
+        const gameDouble = new GameDoubleView(level, this.model.state.answers, this.model.totalLevels);
         gameDouble.onAnswer = (answer) => this._onAnswer(answer);
         return gameDouble;
       case GameModule.TRIPLE:
-        const gameTriple = new GameTripleView(level, this.model.state.answers);
+        const gameTriple = new GameTripleView(level, this.model.state.answers, this.model.totalLevels);
         gameTriple.onAnswer = (answer) => this._onAnswer(answer);
         return gameTriple;
       default:
@@ -52,6 +53,9 @@ export default class GameScreen {
   startTimer() {
     this._interval = setInterval(() => {
       this.model.tick();
+      if (this.model.state.timer === BLINK_TIME) {
+        this.header.blink(true);
+      }
       if (!this.model.state.timer) {
         this._onAnswer(false);
       } else {
@@ -62,6 +66,7 @@ export default class GameScreen {
 
   stopTimer() {
     clearInterval(this._interval);
+    this.header.blink(false);
     this.model.resetTimer();
   }
 

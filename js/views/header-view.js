@@ -52,6 +52,14 @@ export default class HeaderView extends AbstractView {
     }
   }
 
+  blink(start) {
+    if (start) {
+      this._timeElement.classList.add(`game__timer--blink`);
+    } else {
+      this._timeElement.classList.remove(`game__timer--blink`);
+    }
+  }
+
   bind() {
     this._timeElement = this.element.querySelector(`.game__timer`);
     this._livesElement = this.element.querySelector(`.game__lives`);

@@ -51,6 +51,11 @@
   opacity: 0;
 }
 
+.intro--blur ~ .loader {
+  transition: opacity 0.3s;
+  opacity: 0;
+}
+
 .intro__top {
   position: absolute;
   right: 0;

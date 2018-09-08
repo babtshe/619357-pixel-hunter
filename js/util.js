@@ -18,7 +18,7 @@ export const showScreen = (screenElement, clear = true) => {
   if (clear) {
     clearElement(gameFieldElement);
   }
-  const notUnique = [...gameFieldElement.children].some((item) => {
+  const notUnique = Array.from(gameFieldElement.children).some((item) => {
     if (item.className === screenElement.className) {
       gameFieldElement.replaceChild(screenElement, item);
       return true;

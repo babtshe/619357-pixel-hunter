@@ -16,5 +16,4 @@ export default class ModalErrorView extends AbstractView {
       </div>
     </section>`;
   }
-
 }

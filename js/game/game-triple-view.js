@@ -12,9 +12,9 @@ const FRAME = {
 const findSinglePictureType = (images) => {
   const isPhoto = images.reduce((total, item) => {
     if (item.type === ImageType.PAINTING) {
-      return ++total;
+      return total + 1;
     }
-    return 0;
+    return total;
   }, -1);
   return isPhoto ? ImageType.PHOTO : ImageType.PAINTING;
 };
@@ -36,10 +36,10 @@ const generateTemplate = (images, answerRow) => {
 };
 
 export default class GameTripleView extends AbstractView {
-  constructor(images, answers) {
+  constructor(images, answers, levelCount) {
     super();
     this.images = images;
-    this.answerRow = new AnswerRowView(answers).template;
+    this.answerRow = new AnswerRowView(answers, levelCount).template;
   }
 
   get template() {
