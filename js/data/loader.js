@@ -4,15 +4,14 @@ const APP_ID = 619357;
 const DEFAULT_USER = `User`;
 const Url = {
   QUESTIONS: `https://es.dump.academy/pixel-hunter/questions`,
-  RESULTS: `https://es.dump.academy/pixel-hunter/stats/${APP_ID}-`
+  STATS: `https://es.dump.academy/pixel-hunter/stats/${APP_ID}-`
 };
 
 const checkStatus = (response) => {
   if (response.ok) {
     return response;
-  } else {
-    throw new Error(`${response.status}: ${response.statusText}`);
   }
+  throw new Error(`${response.status}: ${response.statusText}`);
 };
 const getJSON = (response) => response.json();
 const getPreloadImageElement = (src) => {
@@ -50,13 +49,13 @@ export default class Loader {
       },
       method: `POST`
     };
-    return fetch(`${Url.RESULTS}${getUserName(userName)}`, requestSettings)
+    return fetch(`${Url.STATS}${getUserName(userName)}`, requestSettings)
     .then(checkStatus)
     .catch((error) => this.onError(error));
   }
 
   loadStats(userName) {
-    return fetch(`${Url.RESULTS}${getUserName(userName)}`)
+    return fetch(`${Url.STATS}${getUserName(userName)}`)
     .then(checkStatus)
     .then(getJSON)
     .catch((error) => this.onError(error));
@@ -73,15 +72,15 @@ export default class Loader {
     const containerElement = document.createElement(`div`);
     for (const level of data) {
       level.map((image) => {
-        const currentElement = getPreloadImageElement(image.src);
+        const imageElement = getPreloadImageElement(image.src);
         const imageLoad = new Promise((resolve, reject) => {
           const notLoaded = setTimeout(() => reject(`Не удалось загрузить данные за отведенное время.`), LOAD_TIMEOUT);
           const onImageLoad = () => {
             clearTimeout(notLoaded);
-            resolve(currentElement);
-            currentElement.removeEventListener(`load`, onImageLoad);
+            resolve(imageElement);
+            imageElement.removeEventListener(`load`, onImageLoad);
           };
-          currentElement.addEventListener(`load`, onImageLoad);
+          imageElement.addEventListener(`load`, onImageLoad);
         });
         imageLoad.then((element) => {
           this.onProgress();
@@ -91,7 +90,7 @@ export default class Loader {
         imageLoad.catch((message) => this.onError(message));
         imagePromises.push(imageLoad);
 
-        containerElement.appendChild(currentElement);
+        containerElement.appendChild(imageElement);
       });
     }
     preloadContainerElement.appendChild(containerElement);

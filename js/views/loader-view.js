@@ -37,12 +37,11 @@ export default class LoaderView extends AbstractView {
     this._currentPhase++;
     if (this._currentPhase > this._phases) {
       return;
-    } else {
-      this._setStrokeDashOffset();
-      this.loaderTextElement.textContent = `${this.progress}%`;
-      if (this._currentPhase === this._phases) {
-        this.onFinish();
-      }
+    }
+    this._setStrokeDashOffset();
+    this.loaderTextElement.textContent = `${this.progress}%`;
+    if (this._currentPhase === this._phases) {
+      this.onFinish();
     }
   }
 

@@ -45,12 +45,12 @@ export default class GameDoubleView extends AbstractView {
 
   bind() {
     const gameOptionElements = this.element.querySelectorAll(`.game__answer input`);
-    const answers = [];
+    const rightAnswers = [];
 
     const onAnswerClick = () => {
       const checkedAnswers = [...gameOptionElements].filter((item) => item.checked);
       if (checkedAnswers.length === this.images.length) {
-        const result = answers.every((item) => item[0].checked);
+        const result = rightAnswers.every((item) => item[0].checked);
         this.onAnswer(result);
       }
     };
@@ -60,7 +60,7 @@ export default class GameDoubleView extends AbstractView {
         return option.name === `question${index + 1}`
         && option.value === item.type;
       });
-      answers.push([rightAnswer, true]);
+      rightAnswers.push([rightAnswer, true]);
       if (debugMode()) {
         rightAnswer.parentElement.style.outline = `solid 5px green`;
       }
