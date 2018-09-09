@@ -12,6 +12,7 @@ const generateTemplate = (stateList) => {
   const gameScores = [];
   stateList.forEach((state, index) => {
     gameScores.push(`<table class="result__table">
+    <tr><td></td><td></td><td></td><td></td><td></td></tr>
     <tr>
       <td class="result__number">${index + 1}.</td>
       <td colspan="2">

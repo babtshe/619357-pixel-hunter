@@ -4,9 +4,9 @@ import {resize} from '../data/resize';
 import AnswerRowView from './answer-row-view';
 import {ImageType} from '../game';
 
-const FRAME = {
-  width: 304,
-  height: 455
+const Frame = {
+  WIDTH: 304,
+  HEIGHT: 455
 };
 
 const findSinglePictureType = (images) => {
@@ -27,7 +27,7 @@ const generateTemplate = (images, answerRow) => {
   ${images.map((item, index) => {
     return `
       <div class="game__option">
-        <img src="${item.src}" alt="Option ${index + 1}" width="${resize(FRAME, item).width}" height="${resize(FRAME, item).height}">
+        <img src="${item.src}" alt="Option ${index + 1}" width="${resize(Frame, item).width}" height="${resize(Frame, item).height}">
       </div>`;
   }).join(``)}
     </form>
@@ -47,7 +47,7 @@ export default class GameTripleView extends AbstractView {
   }
 
   bind() {
-    const gameOptions = this.element.querySelectorAll(`.game__option`);
+    const gameOptionElements = this.element.querySelectorAll(`.game__option`);
 
     const onRightAnswerClick = () => {
       this.onAnswer(true);
@@ -57,7 +57,7 @@ export default class GameTripleView extends AbstractView {
       this.onAnswer(false);
     };
 
-    gameOptions.forEach((item, index) => {
+    gameOptionElements.forEach((item, index) => {
       if (this.images[index].type === findSinglePictureType(this.images)) {
         item.addEventListener(`click`, onRightAnswerClick);
         if (debugMode()) {

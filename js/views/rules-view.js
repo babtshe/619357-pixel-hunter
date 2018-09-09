@@ -49,26 +49,26 @@ export default class RulesView extends AbstractView {
   }
 
   bind() {
-    const form = this.element.querySelector(`.rules__form`);
-    const submitButton = this.element.querySelector(`.rules__button`);
-    const nameInput = this.element.querySelector(`.rules__input`);
+    const formElement = this.element.querySelector(`.rules__form`);
+    const submitButtonElement = this.element.querySelector(`.rules__button`);
+    const nameInputElement = this.element.querySelector(`.rules__input`);
 
     // загружает имя пользователя, если он уже вводил его когда-то.
-    loadSavedName(nameInput, submitButton);
+    loadSavedName(nameInputElement, submitButtonElement);
 
     const onNameInputInput = () => {
-      submitButton.disabled = !nameInput.value.length;
+      submitButtonElement.disabled = !nameInputElement.value.length;
     };
 
     const onFormSubmit = (evt) => {
       evt.preventDefault();
       // сохраняет имя пользователя, чтобы не вводить заново при новой игре
-      localStorage.setItem(`pixelhunterName`, nameInput.value);
-      this.onStartClick(nameInput.value);
+      localStorage.setItem(`pixelhunterName`, nameInputElement.value);
+      this.onStartClick(nameInputElement.value);
     };
 
-    nameInput.addEventListener(`input`, onNameInputInput);
-    form.addEventListener(`submit`, onFormSubmit);
+    nameInputElement.addEventListener(`input`, onNameInputInput);
+    formElement.addEventListener(`submit`, onFormSubmit);
   }
 
   onStartClick() {}

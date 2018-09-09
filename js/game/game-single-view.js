@@ -3,9 +3,9 @@ import AnswerRowView from './answer-row-view';
 import {debugMode} from '../util';
 import {resize} from '../data/resize';
 
-const FRAME = {
-  width: 705,
-  height: 455
+const Frame = {
+  WIDTH: 705,
+  HEIGHT: 455
 };
 
 const generateTemplate = (image, answerRow) => {
@@ -14,7 +14,7 @@ const generateTemplate = (image, answerRow) => {
     <p class="game__task">Угадай, фото или рисунок?</p>
     <form class="game__content  game__content--wide">
       <div class="game__option">
-        <img src="${image.src}" alt="Option 1" width="${resize(FRAME, image).width}" height="${resize(FRAME, image).height}">
+        <img src="${image.src}" alt="Option 1" width="${resize(Frame, image).width}" height="${resize(Frame, image).height}">
         <label class="game__answer  game__answer--photo">
           <input class="visually-hidden" name="question1" type="radio" value="photo">
           <span>Фото</span>
@@ -41,7 +41,7 @@ export default class GameSingleView extends AbstractView {
   }
 
   bind() {
-    const gameOptions = this.element.querySelectorAll(`.game__answer`);
+    const gameOptionElements = this.element.querySelectorAll(`.game__answer input`);
     const onRightAnswerClick = () => {
       this.onAnswer(true);
     };
@@ -50,14 +50,14 @@ export default class GameSingleView extends AbstractView {
       this.onAnswer(false);
     };
 
-    for (let item of gameOptions) {
-      if (item.classList.contains(`game__answer--${this.image.type}`)) {
-        item.control.addEventListener(`click`, onRightAnswerClick);
+    for (const item of gameOptionElements) {
+      if (item.parentElement.classList.contains(`game__answer--${this.image.type}`)) {
+        item.addEventListener(`click`, onRightAnswerClick);
         if (debugMode()) {
-          item.style.outline = `solid 5px green`;
+          item.parentElement.style.outline = `solid 5px green`;
         }
       } else {
-        item.control.addEventListener(`click`, onWrongAnswerClick);
+        item.addEventListener(`click`, onWrongAnswerClick);
       }
     }
   }
