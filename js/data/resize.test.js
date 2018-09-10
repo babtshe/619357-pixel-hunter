@@ -17,7 +17,7 @@ const createTestForFrame = (frame) => {
     });
   };
 
-  const sequence = (expected) => {
+  const createSequence = (expected) => {
     createTest(expected, 8);
     createTest(expected, 7);
     createTest(expected, 5);
@@ -30,15 +30,15 @@ const createTestForFrame = (frame) => {
   describe(`Resize into frame: ${frame.width}x${frame.height}`, () => {
 
     describe(`when "width === height"`, () => {
-      sequence({width: frame.width, height: frame.height});
+      createSequence({width: frame.width, height: frame.height});
     });
 
     describe(`when "width > height"`, () => {
-      sequence({width: frame.width, height: Math.floor(frame.height / 2)});
+      createSequence({width: frame.width, height: Math.floor(frame.height / 2)});
     });
 
     describe(`when "width < height"`, () => {
-      sequence({width: Math.floor(frame.width / 2), height: frame.height});
+      createSequence({width: Math.floor(frame.width / 2), height: frame.height});
     });
 
   });
