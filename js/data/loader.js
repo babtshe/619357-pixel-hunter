@@ -15,12 +15,8 @@ const checkStatus = (response) => {
 };
 const getJSON = (response) => response.json();
 const getPreloadImageElement = (src) => {
-  const imageElement = document.createElement(`img`);
+  const imageElement = new Image();
   imageElement.src = src;
-  imageElement.alt = `Image preload`;
-  imageElement.width = 0;
-  imageElement.height = 0;
-  imageElement.visibility = `hidden`;
   return imageElement;
 };
 const sanitizeString = (value) => {
@@ -62,14 +58,7 @@ export default class Loader {
   }
 
   _preloadImages(data) {
-    /* Прелоадер вставляет картинки в DOM. Оптимальнее было бы предзагружать картинки
-    с помощью fetch или Image, но часть серверов, которые хранят картинки из списка с сайта академии,
-    не возвращает заголовок Access-Control-Allow-Origin и CORS блокирует загрузку скриптом.
-    Кроме того, предзагрузка нужна для определения правильных размеров.
-    */
-    const preloadContainerElement = document.querySelector(`.central`);
     const imagePromises = [];
-    const containerElement = document.createElement(`div`);
     for (const level of data) {
       level.map((image) => {
         const imageElement = getPreloadImageElement(image.src);
@@ -89,13 +78,9 @@ export default class Loader {
         });
         imageLoad.catch((message) => this.onError(message));
         imagePromises.push(imageLoad);
-
-        containerElement.appendChild(imageElement);
       });
     }
-    preloadContainerElement.appendChild(containerElement);
     this.onLoaderViewInit(imagePromises.length);
-
     Promise.all(imagePromises).then(() => this.onDataResponse(data));
   }
 
