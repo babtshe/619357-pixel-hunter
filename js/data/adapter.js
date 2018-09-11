@@ -1,9 +1,9 @@
 import {ImageType} from '../game';
 
 export const adapter = (data) => {
-  const result = [];
+  const results = [];
   for (const level of data) {
-    result.push(level.answers.map((item) => {
+    results.push(level.answers.map((item) => {
       return {
         src: item.image.url,
         type: ImageType[item.type.toUpperCase()],
@@ -12,5 +12,5 @@ export const adapter = (data) => {
       };
     }));
   }
-  return result;
+  return results;
 };
