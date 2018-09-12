@@ -27,16 +27,20 @@ const getUserName = (name) => {
 };
 
 export default class Loader {
-  loadGameData() {
-    fetch(Url.QUESTIONS)
-    .then(checkStatus)
-    .then(getJSON)
-    .then(adapter)
-    .then(this._preloadImages.bind(this))
-    .catch((error) => this.onError(error));
+  async loadGameData() {
+    try {
+      const response = await fetch(Url.QUESTIONS);
+      const data = checkStatus(response);
+      const dataJSON = await getJSON(data);
+      const adaptedData = adapter(dataJSON);
+      return await this._preloadImages(adaptedData);
+    } catch (error) {
+      this.onError(error);
+      return error;
+    }
   }
 
-  sendStats(answers, lives, userName) {
+  async sendStats(answers, lives, userName) {
     const data = Object.assign({}, {answers}, {lives});
     const requestSettings = {
       body: JSON.stringify(data),
@@ -45,22 +49,30 @@ export default class Loader {
       },
       method: `POST`
     };
-    return fetch(`${Url.STATS}${getUserName(userName)}`, requestSettings)
-    .then(checkStatus)
-    .catch((error) => this.onError(error));
+    try {
+      const response = await fetch(`${Url.STATS}${getUserName(userName)}`, requestSettings);
+      return checkStatus(response);
+    } catch (error) {
+      this.onError(error);
+      return error;
+    }
   }
 
-  loadStats(userName) {
-    return fetch(`${Url.STATS}${getUserName(userName)}`)
-    .then(checkStatus)
-    .then(getJSON)
-    .catch((error) => this.onError(error));
+  async loadStats(userName) {
+    try {
+      const response = await fetch(`${Url.STATS}${getUserName(userName)}`);
+      const data = checkStatus(response);
+      return await getJSON(data);
+    } catch (error) {
+      this.onError(error);
+      return error;
+    }
   }
 
-  _preloadImages(data) {
+  async _preloadImages(data) {
     const imagePromises = [];
     for (const level of data) {
-      level.map((image) => {
+      level.map(async (image) => {
         const imageElement = getPreloadImageElement(image.src);
         const imageLoad = new Promise((resolve, reject) => {
           const notLoaded = setTimeout(() => reject(`Не удалось загрузить данные за отведенное время.`), LOAD_TIMEOUT);
@@ -71,21 +83,23 @@ export default class Loader {
           };
           imageElement.addEventListener(`load`, onImageLoad);
         });
-        imageLoad.then((element) => {
+        imagePromises.push(imageLoad);
+        try {
+          const element = await imageLoad;
           this.onProgress();
           image.width = element.naturalWidth;
           image.height = element.naturalHeight;
-        });
-        imageLoad.catch((message) => this.onError(message));
-        imagePromises.push(imageLoad);
+        } catch (error) {
+          this.onError(error);
+        }
       });
     }
     this.onLoaderViewInit(imagePromises.length);
-    Promise.all(imagePromises).then(() => this.onDataResponse(data));
+    await Promise.all(imagePromises);
+    return data;
   }
 
   onLoaderViewInit() {}
   onProgress() {}
-  onDataResponse() {}
   onError() {}
 }

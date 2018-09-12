@@ -13,22 +13,18 @@ import StatsView from './views/stats-view';
 const ANIMATION_DURATION = 1000;
 let levelData;
 
-const loadData = (cb) => {
+const loadData = async (cb) => {
   const loader = new Loader();
   loader.onError = (error) => Application.showModalError(error);
-  loader.onDataResponse = (data) => {
-    levelData = data;
-  };
   loader.onLoaderViewInit = (length) => {
     const loaderView = new LoaderView(length);
     loaderView.onFinish = () => cb();
     showScreen(loaderView.element, false);
     loader.onProgress = () => loaderView.nextPhase();
   };
-  loader.loadGameData();
+  levelData = await loader.loadGameData();
 };
 export default class Application {
-
 
   static showIntro() {
     const intro = new IntroView();
@@ -56,25 +52,22 @@ export default class Application {
   static showGame(playerName) {
     const gameScreen = new GameScreen(new GameModel(playerName, levelData));
     gameScreen.onBackClick = () => Application.showModalConfirm();
-    gameScreen.onGameEnd = (answers, lives, player, levelCount) => {
+    gameScreen.onGameEnd = async (answers, lives, player, levelCount) => {
       const loader = new Loader();
       loader.onError = (error) => Application.showModalError(error);
-      loader.sendStats(answers, lives, player)
-      .then(() => Application.showStats(player, levelCount));
+      await loader.sendStats(answers, lives, player);
+      Application.showStats(player, levelCount);
     };
     showScreen(gameScreen.element);
   }
 
-  static showStats(player, levelCount) {
+  static async showStats(player, levelCount) {
     const loader = new Loader();
     loader.onError = (error) => Application.showModalError(error);
-    loader.loadStats(player)
-    .then((data) => {
-      const stats = new StatsView(data, levelCount);
-      stats.onBackClick = () => Application.showGreeting();
-      showScreen(stats.element);
-    });
-
+    const statsData = await loader.loadStats(player);
+    const stats = new StatsView(statsData, levelCount);
+    stats.onBackClick = () => Application.showGreeting();
+    showScreen(stats.element);
   }
 
   static showModalConfirm() {
