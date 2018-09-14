@@ -1,6 +1,6 @@
 {
   "files": [
-    "./js/main.ts"
+    "./ts/main.ts"
   ],
   "compilerOptions": {
     "outDir": "./build",
