@@ -13,8 +13,12 @@
   "devDependencies": {
     "@babel/core": "7.0.0",
     "@babel/preset-env": "7.0.0",
+    "@types/chai": "4.1.4",
+    "@types/mocha": "5.2.5",
     "autoprefixer": "9.0.2",
+    "babelify": "10.0.0",
     "browser-sync": "2.24.6",
+    "browserify": "16.2.2",
     "chai": "4.1.2",
     "css-mqpacker": "7.0.0",
     "del": "3.0.0",
@@ -32,11 +36,13 @@
     "gulp-sourcemaps": "2.6.4",
     "gulp-svgstore": "6.1.1",
     "gulp-uglify": "3.0.1",
-    "rollup-plugin-babel": "4.0.3",
-    "rollup-plugin-commonjs": "9.1.5",
-    "rollup-plugin-node-resolve": "3.4.0",
     "stylelint": "9.4.x",
-    "stylelint-config-htmlacademy": "0.1.x"
+    "stylelint-config-htmlacademy": "0.1.x",
+    "ts-node": "7.0.1",
+    "tsify": "4.0.0",
+    "typescript": "3.0.3",
+    "vinyl-buffer": "1.0.1",
+    "vinyl-source-stream": "2.0.0"
   },
   "engines": {
     "node": "8"

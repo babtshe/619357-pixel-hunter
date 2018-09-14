@@ -5,6 +5,7 @@ export default class ModalErrorView extends AbstractView {
     super();
     this._message = message;
   }
+  private _message: string
 
   get template() {
     return `

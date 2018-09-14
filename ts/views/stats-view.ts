@@ -9,7 +9,7 @@ const Titles = {
 };
 
 const generateTemplate = (stateList) => {
-  const gameScores = [];
+  const gameScores: Array<string> = [];
   stateList.forEach((state, index) => {
     gameScores.push(`<table class="result__table">
     <tr><td></td><td></td><td></td><td></td><td></td></tr>
@@ -94,29 +94,34 @@ const calculateStatistics = (answers, lives, levelCount) => {
 export default class StatsView extends AbstractView {
   constructor(results, levelCount) {
     super();
-    this.levelCount = levelCount;
-    this.scoresStorage = [];
+    this._levelCount = levelCount;
+    this._scoresStorage = [];
     for (const item of results) {
-      this.scoresStorage.unshift(calculateStatistics(item.answers, item.lives, this.levelCount));
+      this._scoresStorage.unshift(calculateStatistics(item.answers, item.lives, this._levelCount));
     }
-    this.header = new HeaderView();
-    this.header.onBackClick = () => this.onBackClick();
+    this._header = new HeaderView();
+    this._header.onBackClick = () => this.onBackClick();
   }
 
+  private _levelCount
+  private _scoresStorage
+  private _header
+  private _customElement
+
   get template() {
-    return generateTemplate(this.scoresStorage);
+    return generateTemplate(this._scoresStorage);
   }
 
   get element() {
-    if (this._element) {
-      return this._element;
+    if (this._customElement) {
+      return this._customElement;
     }
     const fragment = document.createDocumentFragment();
-    fragment.appendChild(this.header.element);
+    fragment.appendChild(this._header.element);
     fragment.appendChild(this.render());
-    this._element = fragment;
-    this.bind(this._element);
-    return this._element;
+    this._customElement = fragment;
+    this.bind(this._customElement);
+    return this._customElement;
   }
 
   onBackClick() {}

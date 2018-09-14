@@ -1,6 +1,6 @@
 export const MAX_LIVES = 3;
 export const POINT_COST = 50;
-export const INITIAL_GAME = {
+export const INITIAL_GAME: state = {
   timer: 30,
   lives: 3,
   level: 0,
@@ -24,6 +24,13 @@ export const ImageType = {
   PAINTING: `paint`
 };
 
+interface state {
+  timer: number,
+  lives: number,
+  level: number,
+  answers: Array<number>
+}
+
 export const calculateScores = (answers, lives) => {
   if (lives < 0) {
     return 0;
@@ -31,8 +38,8 @@ export const calculateScores = (answers, lives) => {
   return (answers.reduce((accumulator, item) => accumulator + item) + lives) * POINT_COST;
 };
 
-export const calculateLives = (game, answer) => {
-  const lives = game.lives - !answer;
+export const calculateLives = (game: state, answer: number) => {
+  const lives = game.lives - +!answer;
   return Object.assign({}, game, {lives});
 };
 

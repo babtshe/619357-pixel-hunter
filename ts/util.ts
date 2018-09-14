@@ -6,17 +6,19 @@ const clearElement = (item) => {
   }
 };
 
-export const getElementFromString = (value) => {
+export const getElementFromString = (value: string): HTMLElement => {
   const wrapper = document.createElement(`div`);
   wrapper.appendChild(document.createRange().createContextualFragment(value));
-  return wrapper.firstElementChild;
+  return wrapper.firstElementChild as HTMLElement;
 };
 
 export const debugMode = () => window.location.hash.toLowerCase() === `#debug`;
 
-export const showScreen = (screenElement, clear = true) => {
-  if (clear) {
-    clearElement(gameFieldElement);
+export const showScreen = (screenElement: HTMLElement, clear = true) => {
+  if (gameFieldElement) {
+    if (clear) {
+      clearElement(gameFieldElement);
+    }
+    gameFieldElement.appendChild(screenElement);
   }
-  gameFieldElement.appendChild(screenElement);
 };

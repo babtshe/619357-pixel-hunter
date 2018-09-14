@@ -31,11 +31,15 @@ const generateHeaderTemplate = (time, lives) => {
 };
 
 export default class HeaderView extends AbstractView {
-  constructor(time, lives) {
+  constructor(time?, lives?) {
     super();
     this._time = time;
     this._lives = lives;
   }
+  private _time
+  private _lives
+  private _timeElement
+  private _livesElement
 
   get template() {
     return generateHeaderTemplate(this._time, this._lives);
@@ -46,7 +50,7 @@ export default class HeaderView extends AbstractView {
       this._timeElement.textContent = time;
       this._time = time;
     }
-    if (lives !== this.lives) {
+    if (lives !== this._lives) {
       this._livesElement.innerHTML = generateLivesTemplate(lives, MAX_LIVES);
       this._lives = lives;
     }
@@ -64,7 +68,9 @@ export default class HeaderView extends AbstractView {
     this._timeElement = this.element.querySelector(`.game__timer`);
     this._livesElement = this.element.querySelector(`.game__lives`);
     const backElement = this.element.querySelector(`button.back`);
-    backElement.addEventListener(`click`, this.onBackClick);
+    if (backElement) {
+      backElement.addEventListener(`click`, this.onBackClick);
+    }
   }
 
   onBackClick() {}
