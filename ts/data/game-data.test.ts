@@ -85,15 +85,15 @@ describe(`Scores count`, () => {
 describe(`Lives count`, () => {
   it(`should return 0 if right answer and no lifes left`, () => {
     const currentGame = Object.assign({}, game.INITIAL_GAME, {lives: 0});
-    assert.equal(game.calculateLives(currentGame, game.Answer.Type.FAST).lives, 0);
+    assert.equal(game.calculateLives(currentGame, true).lives, 0);
   });
   it(`should return -1 if wrong answer and no lives left`, () => {
     const currentGame = Object.assign({}, game.INITIAL_GAME, {lives: 0});
-    assert.equal(game.calculateLives(currentGame, game.Answer.Type.WRONG).lives, -1);
+    assert.equal(game.calculateLives(currentGame, false).lives, -1);
   });
   it(`should return 3 if right answer and max lives left`, () => {
     const currentGame = Object.assign({}, game.INITIAL_GAME, {lives: 3});
-    assert.equal(game.calculateLives(currentGame, game.Answer.Type.SLOW).lives, 3);
+    assert.equal(game.calculateLives(currentGame, true).lives, 3);
   });
 });
 
@@ -144,7 +144,7 @@ describe(`Game add answer`, () => {
       game.Answer.Type.FAST,
       game.Answer.Type.NORMAL
     ]}, {lives: 3}, {timer: 20});
-    assert.equal(game.addAnswer(currentGame, 0).answers[2], 0);
+    assert.equal(game.addAnswer(currentGame, false).answers[2], 0);
   });
   it(`answers array[4] should be 3 if fast and right answer`, () => {
     const currentGame = Object.assign({}, game.INITIAL_GAME, {answers: [
@@ -153,6 +153,6 @@ describe(`Game add answer`, () => {
       game.Answer.Type.SLOW,
       game.Answer.Type.NORMAL
     ]}, {lives: 3}, {timer: 25});
-    assert.equal(game.addAnswer(currentGame, 1).answers[4], 3);
+    assert.equal(game.addAnswer(currentGame, true).answers[4], 3);
   });
 });
