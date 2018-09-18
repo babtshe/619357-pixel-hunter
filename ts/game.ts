@@ -38,8 +38,8 @@ export const calculateScores = (answers, lives) => {
   return (answers.reduce((accumulator, item) => accumulator + item) + lives) * POINT_COST;
 };
 
-export const calculateLives = (game: state, answer: number) => {
-  const lives = game.lives - +!answer;
+export const calculateLives = (game: state, answer: boolean) => {
+  const lives = game.lives - Number(!answer);
   return Object.assign({}, game, {lives});
 };
 
@@ -68,8 +68,8 @@ export const changeLevel = (game, level) => {
   return Object.assign({}, game, {level});
 };
 
-export const addAnswer = (game, answer) => {
-  const answerValue = answer * calculateAnswerType(game.timer);
+export const addAnswer = (game, answer: boolean) => {
+  const answerValue = Number(answer) * calculateAnswerType(game.timer);
   const answers = [...game.answers, answerValue];
   return Object.assign({}, game, {answers});
 };

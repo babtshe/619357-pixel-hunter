@@ -89,7 +89,7 @@ export default class GameScreen {
     }
   }
 
-  _onAnswer(answer) {
+  _onAnswer(answer: boolean) {
     this._model.addAnswer(answer);
     this.stopTimer();
     this.updateHeader();

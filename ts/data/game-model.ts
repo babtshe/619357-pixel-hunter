@@ -42,7 +42,7 @@ export default class GameModel {
     this._state = Object.assign({}, this._state, {timer: INITIAL_GAME.timer});
   }
 
-  addAnswer(answer) {
+  addAnswer(answer: boolean) {
     this._state = addAnswer(this._state, answer);
     this._state = calculateLives(this._state, answer);
     this._state = changeLevel(this._state, this._state.level + 1);
