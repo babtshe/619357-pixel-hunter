@@ -13,9 +13,12 @@ const loadSavedName = (inputField, submitButton) => {
 export default class RulesView extends AbstractView {
   constructor() {
     super();
-    this.header = new HeaderView();
-    this.header.onBackClick = () => this.onBackClick();
+    this._header = new HeaderView();
+    this._header.onBackClick = () => this.onBackClick();
   }
+
+  private _header
+  private _customElement
 
   get template() {
     return `
@@ -38,14 +41,15 @@ export default class RulesView extends AbstractView {
   }
 
   get element() {
-    if (this._element) {
-      return this._element;
+    if (this._customElement) {
+      return this._customElement;
     }
     const fragment = document.createDocumentFragment();
-    fragment.append(this.header.element, this.render());
-    this._element = fragment;
-    this.bind(this._element);
-    return this._element;
+    fragment.appendChild(this._header.element);
+    fragment.appendChild(this.render());
+    this._customElement = fragment;
+    this.bind();
+    return this._customElement;
   }
 
   bind() {
@@ -71,6 +75,6 @@ export default class RulesView extends AbstractView {
     formElement.addEventListener(`submit`, onFormSubmit);
   }
 
-  onStartClick() {}
+  onStartClick(playerName: string): void {}
   onBackClick() {}
 }

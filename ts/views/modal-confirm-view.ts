@@ -1,8 +1,20 @@
 import AbstractView from './abstract-view';
 export default class ModalConfirmView extends AbstractView {
-  constructor(currentDocument) {
+  constructor(currentDocument: Document) {
     super();
     this._document = currentDocument;
+  }
+
+  private _document
+  private _modalCloseElement
+  private _modalCancelElement
+  private _modalOkElement
+  private _onEscKeyDown = (evt) => {
+    if (evt.key === `Escape`) {
+      this.hide();
+      evt.preventDefault();
+      this.onCancel();
+    }
   }
 
   get template() {
@@ -24,7 +36,7 @@ export default class ModalConfirmView extends AbstractView {
 
   hide() {
     this._document.removeEventListener(`keydown`, this._onEscKeyDown);
-    this._element.remove();
+    this.element.remove();
   }
 
   bind() {
@@ -49,19 +61,11 @@ export default class ModalConfirmView extends AbstractView {
       this.onConfirm();
     };
 
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape`) {
-        this.hide();
-        evt.preventDefault();
-        this.onCancel();
-      }
-    };
-
     this._modalCloseElement.addEventListener(`click`, onCloseElementClick);
     this._modalCancelElement.addEventListener(`click`, onCancelElementClick);
     this._modalOkElement.addEventListener(`click`, onOkElementClick);
     this._modalOkElement.focus();
-    this._document.addEventListener(`keydown`, onEscKeyDown);
+    this._document.addEventListener(`keydown`, this._onEscKeyDown);
   }
 
   onConfirm() {}

@@ -1,7 +1,7 @@
 import AbstractView from '../views/abstract-view';
 import {Answer} from '../game';
 
-const getStatClassByAnswerType = (answerType) => {
+const getStatClassByAnswerType = (answerType?) => {
   switch (answerType) {
     case Answer.Type.WRONG:
       return `stats__result--wrong`;
@@ -22,7 +22,7 @@ const fillUndefinedAnswers = (answers, levelCount) => {
 };
 
 export const generateAnswersListTemplate = (answers, levelCount) => {
-  let statsItems = [];
+  let statsItems: Array<string> = [];
   for (const item of answers) {
     statsItems.push(`<li class="stats__result ${getStatClassByAnswerType(item)}"></li>`);
   }
@@ -36,11 +36,14 @@ export const generateAnswersListTemplate = (answers, levelCount) => {
 export default class AnswerRowView extends AbstractView {
   constructor(answers, levelCount) {
     super();
-    this.answers = answers;
-    this.levelCount = levelCount;
+    this._answers = answers;
+    this._levelCount = levelCount;
   }
 
+  private _answers: Array<number>
+  private _levelCount: number
+
   get template() {
-    return generateAnswersListTemplate(this.answers, this.levelCount);
+    return generateAnswersListTemplate(this._answers, this._levelCount);
   }
 }

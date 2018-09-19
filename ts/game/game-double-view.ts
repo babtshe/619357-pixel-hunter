@@ -35,34 +35,37 @@ const generateTemplate = (images, answerRow) => {
 export default class GameDoubleView extends AbstractView {
   constructor(images, answers, levelCount) {
     super();
-    this.images = images;
-    this.answerRow = new AnswerRowView(answers, levelCount).template;
+    this._images = images;
+    this._answerRow = new AnswerRowView(answers, levelCount).template;
   }
+  private _images
+  private _answerRow
 
   get template() {
-    return generateTemplate(this.images, this.answerRow);
+    return generateTemplate(this._images, this._answerRow);
   }
 
   bind() {
-    const gameOptionElements = this.element.querySelectorAll(`.game__answer input`);
-    const rightAnswers = [];
+    const gameOptionElements: NodeList = this.element.querySelectorAll(`.game__answer input`);
+    const rightAnswers: Array<HTMLInputElement> = [];
 
     const onAnswerClick = () => {
-      const checkedAnswers = [...gameOptionElements].filter((item) => item.checked);
-      if (checkedAnswers.length === this.images.length) {
-        const result = rightAnswers.every((item) => item[0].checked);
+      const checkedAnswers = [...gameOptionElements].filter((item: HTMLInputElement) => item.checked);
+      if (checkedAnswers.length === this._images.length) {
+        const result = rightAnswers.every((item) => item.checked);
         this.onAnswer(result);
       }
     };
 
-    this.images.forEach((item, index) => {
-      const rightAnswer = [...gameOptionElements].find((option) => {
+    this._images.forEach((item, index) => {
+      const rightAnswer = [...gameOptionElements].find((option: HTMLInputElement) => {
         return option.name === `question${index + 1}`
         && option.value === item.type;
-      });
-      rightAnswers.push([rightAnswer, true]);
+      }) as HTMLInputElement;
+      rightAnswers.push(rightAnswer);
       if (debugMode()) {
-        rightAnswer.parentElement.style.outline = `solid 5px green`;
+        const labelElement = rightAnswer.parentElement as HTMLElement;
+        labelElement.style.outline = `solid 5px green`;
       }
     });
 
@@ -71,5 +74,5 @@ export default class GameDoubleView extends AbstractView {
     }
   }
 
-  onAnswer() {}
+  onAnswer(answer: boolean):void {}
 }

@@ -5,8 +5,21 @@ export default class GameModel {
   constructor(playerName, levelData) {
     this._levelData = levelData;
     this._state = INITIAL_GAME;
-    this.totalLevels = levelData.length;
-    this.playerName = playerName;
+    this._totalLevels = levelData.length;
+    this._playerName = playerName;
+  }
+
+  private _levelData: Object
+  private _state
+  private _totalLevels: number
+  private _playerName: string
+
+  get totalLevels() {
+    return this._totalLevels;
+  }
+
+  get playerName() {
+    return this._playerName;
   }
 
   get state() {
@@ -29,7 +42,7 @@ export default class GameModel {
     this._state = Object.assign({}, this._state, {timer: INITIAL_GAME.timer});
   }
 
-  addAnswer(answer) {
+  addAnswer(answer: boolean) {
     this._state = addAnswer(this._state, answer);
     this._state = calculateLives(this._state, answer);
     this._state = changeLevel(this._state, this._state.level + 1);

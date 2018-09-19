@@ -38,12 +38,14 @@ const generateTemplate = (images, answerRow) => {
 export default class GameTripleView extends AbstractView {
   constructor(images, answers, levelCount) {
     super();
-    this.images = images;
-    this.answerRow = new AnswerRowView(answers, levelCount).template;
+    this._images = images;
+    this._answerRow = new AnswerRowView(answers, levelCount).template;
   }
+  private _images
+  private _answerRow
 
   get template() {
-    return generateTemplate(this.images, this.answerRow);
+    return generateTemplate(this._images, this._answerRow);
   }
 
   bind() {
@@ -57,8 +59,8 @@ export default class GameTripleView extends AbstractView {
       this.onAnswer(false);
     };
 
-    gameOptionElements.forEach((item, index) => {
-      if (this.images[index].type === findSinglePictureType(this.images)) {
+    gameOptionElements.forEach((item: HTMLElement, index) => {
+      if (this._images[index].type === findSinglePictureType(this._images)) {
         item.addEventListener(`click`, onRightAnswerClick);
         if (debugMode()) {
           item.style.outline = `solid 5px green`;
@@ -68,4 +70,5 @@ export default class GameTripleView extends AbstractView {
       }
     });
   }
+  onAnswer(answer: boolean): void{}
 }

@@ -10,17 +10,22 @@ const minify = require(`gulp-csso`);
 const rename = require(`gulp-rename`);
 const imagemin = require(`gulp-imagemin`);
 const svgstore = require(`gulp-svgstore`);
-const rollup = require(`gulp-better-rollup`);
 const sourcemaps = require(`gulp-sourcemaps`);
 const mocha = require(`gulp-mocha`);
-const commonjs = require(`rollup-plugin-commonjs`);
-const babel = require(`rollup-plugin-babel`);
-const nodeResolve = require(`rollup-plugin-node-resolve`);
 const uglify = require(`gulp-uglify`);
+const browserify = require(`browserify`);
+const source = require(`vinyl-source-stream`);
+const tsify = require(`tsify`);
+const buffer = require(`vinyl-buffer`);
+const babelify = require(`babelify`);
+
+gulp.plumbedSrc = (path) => {
+  return gulp.src(path)
+  .pipe(plumber());
+};
 
 gulp.task(`style`, () => {
-  return gulp.src(`sass/style.scss`).
-    pipe(plumber()).
+  return gulp.plumbedSrc(`sass/style.scss`).
     pipe(sass()).
     pipe(postcss([
       autoprefixer({
@@ -51,20 +56,24 @@ gulp.task(`sprite`, () => {
 });
 
 gulp.task(`scripts`, () => {
-  return gulp.src(`js/main.js`)
+  return browserify({
+    basedir: `.`,
+    debug: true,
+    entries: [`ts/main.ts`],
+    cache: {},
+    packageCache: {}
+  })
+  .plugin(tsify)
+  .transform(babelify, {
+    presets: [`@babel/preset-env`],
+    extensions: [`.ts`],
+    exclude: `node_modules/**`
+  })
+  .bundle()
     .pipe(plumber())
-    .pipe(sourcemaps.init())
-    .pipe(rollup({
-      plugins: [
-        nodeResolve(),
-        commonjs(),
-        babel({
-          babelrc: false,
-          exclude: `node_modules/**`,
-          presets: [`@babel/env`]
-        })
-      ]
-    }, `iife`))
+  .pipe(source(`main.js`))
+  .pipe(buffer())
+  .pipe(sourcemaps.init({loadMaps: true}))
     .pipe(uglify())
     .pipe(sourcemaps.write(``))
     .pipe(gulp.dest(`build/js`));
@@ -117,7 +126,7 @@ gulp.task(`serve`, [`assemble`], () => {
       gulp.start(`copy-html`);
     }
   });
-  gulp.watch(`js/**/*.js`, [`js-watch`]);
+  gulp.watch(`ts/**/*.ts`, [`js-watch`]);
 });
 
 gulp.task(`assemble`, [`clean`], () => {
@@ -130,13 +139,9 @@ gulp.task(`build`, [`assemble`], () => {
 
 gulp.task(`test`, function () {
   return gulp
-  .src([`js/**/*.test.js`])
-  .pipe(rollup({
-    plugins: [
-      commonjs()
-    ]}, `cjs`))
-  .pipe(gulp.dest(`build/test`))
+  .plumbedSrc([`ts/**/*.test.ts`])
   .pipe(mocha({
-    reporter: `spec`
+    reporter: `spec`,
+    require: [`ts-node/register`]
   }));
 });

@@ -32,16 +32,18 @@ const generateTemplate = (image, answerRow) => {
 export default class GameSingleView extends AbstractView {
   constructor(image, answers, levelCount) {
     super();
-    this.image = image[0];
-    this.answerRow = new AnswerRowView(answers, levelCount).template;
+    this._image = image[0];
+    this._answerRow = new AnswerRowView(answers, levelCount).template;
   }
+  private _image
+  private _answerRow
 
   get template() {
-    return generateTemplate(this.image, this.answerRow);
+    return generateTemplate(this._image, this._answerRow);
   }
 
   bind() {
-    const gameOptionElements = this.element.querySelectorAll(`.game__answer input`);
+    const gameOptionElements: NodeListOf<HTMLInputElement> = this.element.querySelectorAll(`.game__answer input`);
     const onRightAnswerClick = () => {
       this.onAnswer(true);
     };
@@ -51,10 +53,11 @@ export default class GameSingleView extends AbstractView {
     };
 
     for (const item of gameOptionElements) {
-      if (item.parentElement.classList.contains(`game__answer--${this.image.type}`)) {
+      const labelElement = item.parentElement;
+      if (labelElement && labelElement.classList.contains(`game__answer--${this._image.type}`)) {
         item.addEventListener(`click`, onRightAnswerClick);
         if (debugMode()) {
-          item.parentElement.style.outline = `solid 5px green`;
+          labelElement.style.outline = `solid 5px green`;
         }
       } else {
         item.addEventListener(`click`, onWrongAnswerClick);
@@ -62,5 +65,5 @@ export default class GameSingleView extends AbstractView {
     }
   }
 
-  onAnswer() {}
+  onAnswer(answer: boolean): void {}
 }

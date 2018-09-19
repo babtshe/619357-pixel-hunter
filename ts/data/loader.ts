@@ -14,7 +14,7 @@ const checkStatus = (response) => {
   throw new Error(`${response.status}: ${response.statusText}`);
 };
 const getJSON = (response) => response.json();
-const getPreloadImageElement = (src) => {
+const getPreloadImageElement = (src): HTMLImageElement => {
   const imageElement = new Image();
   imageElement.src = src;
   return imageElement;
@@ -70,11 +70,11 @@ export default class Loader {
   }
 
   async _preloadImages(data) {
-    const imagePromises = [];
+    const imagePromises: Array<Promise<HTMLImageElement>> = [];
     for (const level of data) {
       level.map(async (image) => {
         const imageElement = getPreloadImageElement(image.src);
-        const imageLoad = new Promise((resolve, reject) => {
+        const imageLoad: Promise<HTMLImageElement> = new Promise((resolve, reject) => {
           const notLoaded = setTimeout(() => reject(`Не удалось загрузить данные за отведенное время.`), LOAD_TIMEOUT);
           const onImageLoad = () => {
             clearTimeout(notLoaded);
@@ -85,7 +85,7 @@ export default class Loader {
         });
         imagePromises.push(imageLoad);
         try {
-          const element = await imageLoad;
+          const element = await imageLoad as HTMLImageElement;
           this.onProgress();
           image.width = element.naturalWidth;
           image.height = element.naturalHeight;
@@ -99,7 +99,7 @@ export default class Loader {
     return data;
   }
 
-  onLoaderViewInit() {}
+  onLoaderViewInit(imagesCount: number) {}
   onProgress() {}
-  onError() {}
+  onError(error: string):void {}
 }

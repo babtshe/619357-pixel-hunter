@@ -6,10 +6,16 @@ export default class LoaderView extends AbstractView {
     super();
     this._phases = phases;
     this._currentPhase = 0;
-    this.loaderBarElement = this.element.querySelector(`.loader__bar`);
-    this.loaderTextElement = this.element.querySelector(`.loader__text`);
+    this._loaderBarElement = this.element.querySelector(`.loader__bar`);
+    this._loaderTextElement = this.element.querySelector(`.loader__text`);
     this._setStrokeDashOffset();
   }
+
+  private _phases: number
+  private _currentPhase: number
+  private _loaderBarElement: HTMLElement|null
+  private _loaderTextElement: HTMLElement|null
+
 
   get template() {
     return `
@@ -30,7 +36,9 @@ export default class LoaderView extends AbstractView {
 
   _setStrokeDashOffset() {
     const offset = DASH_ARRAY - DASH_ARRAY % this._phases - Math.floor(DASH_ARRAY / this._phases) * this._currentPhase;
-    this.loaderBarElement.setAttribute(`stroke-dashoffset`, offset);
+    if (this._loaderBarElement){
+      this._loaderBarElement.setAttribute(`stroke-dashoffset`, String(offset));
+    }
   }
 
   nextPhase() {
@@ -39,7 +47,9 @@ export default class LoaderView extends AbstractView {
       return;
     }
     this._setStrokeDashOffset();
-    this.loaderTextElement.textContent = `${this.progress}%`;
+    if (this._loaderTextElement) {
+      this._loaderTextElement.textContent = `${this.progress}%`;
+    }
     if (this._currentPhase === this._phases) {
       this.onFinish();
     }
