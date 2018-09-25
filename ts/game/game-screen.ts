@@ -68,6 +68,7 @@ export default class GameScreen {
 
   _getLevelView(level) {
     if (this._model.gameOver) {
+      this._onAnswer = () => {};
       this.onGameEnd(this._model.state.answers, this._model.state.lives, this._model.playerName, this._model.totalLevels);
       return ``;
     }
